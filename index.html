@@ -227,115 +227,23 @@
     <button class="btn" onclick="saveName()">계속</button>
   </div>
 
-  <!-- 질문 1~10 + 공감 멘트 -->
-  <div class="screen" id="screen-5">
-    <div class="q-num">01 / 10</div>
-    <div class="main-text">요즘 마음을 가장 따뜻하게 했던 순간을<br>하나 떠올려 볼까요?<br><span style="font-size:0.8em;opacity:0.7">그때의 감정을 자유롭게 들려주세요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans1" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(1)">계속</button>
-  </div>
-  <div class="screen" id="screen-e1">
-    <div class="empathy-text" id="empathy-1"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-5')">← 다시 쓸게요</button><button class="btn" onclick="next(6)">계속</button></div>
+  <!-- 질문 화면 — 동적으로 채워짐 -->
+  <div class="screen" id="screen-q">
+    <div class="q-num" id="qNum"></div>
+    <div class="main-text" id="qText"></div>
+    <div class="input-wrap" style="margin-top:28px">
+      <textarea class="textarea-input" id="qAnswer" placeholder="여기에 답변을 입력하세요..."></textarea>
+    </div>
+    <button class="btn" id="qBtn" onclick="submitAnswer()">계속</button>
   </div>
 
-  <div class="screen" id="screen-6">
-    <div class="q-num">02 / 10</div>
-    <div class="main-text">지금 가장 마음에 걸리는 고민이 있다면<br>편하게 털어놓아요.<br><span style="font-size:0.8em;opacity:0.7">여기선 아무도 평가하지 않아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans2" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(2)">계속</button>
-  </div>
-  <div class="screen" id="screen-e2">
-    <div class="empathy-text" id="empathy-2"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-6')">← 다시 쓸게요</button><button class="btn" onclick="next(7)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-7">
-    <div class="q-num">03 / 10</div>
-    <div class="main-text">요즘 어떤 위로나 응원이 가장 필요한가요?<br><span style="font-size:0.8em;opacity:0.7">스스로에게 해주고 싶은 말도 좋아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans3" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(3)">계속</button>
-  </div>
-  <div class="screen" id="screen-e3">
-    <div class="empathy-text" id="empathy-3"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-7')">← 다시 쓸게요</button><button class="btn" onclick="next(8)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-8">
-    <div class="q-num">04 / 10</div>
-    <div class="main-text">친구들이 자주 칭찬하는 당신의 모습이 있나요?<br><span style="font-size:0.8em;opacity:0.7">본인은 "이게 뭐가 대단해?"라고 넘겼던 것도 괜찮아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans4" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(4)">이것도 재능이 될까요</button>
-  </div>
-  <div class="screen" id="screen-e4">
-    <div class="empathy-text" id="empathy-4"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-8')">← 다시 쓸게요</button><button class="btn" onclick="next(9)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-9">
-    <div class="q-num">05 / 10</div>
-    <div class="main-text">돈도 시간도 신경 쓰지 않아도 된다면,<br>하루를 어떻게 보내고 싶으세요?<br><span style="font-size:0.8em;opacity:0.7">아주 사소한 것도 좋아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans5" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(5)">제가 꿈꾸는 삶이에요</button>
-  </div>
-  <div class="screen" id="screen-e5">
-    <div class="empathy-text" id="empathy-5"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-9')">← 다시 쓸게요</button><button class="btn" onclick="next(10)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-10">
-    <div class="q-num">06 / 10</div>
-    <div class="main-text">요즘 자기도 모르게 계속 찾아보게 되는<br>주제가 있나요?<br><span style="font-size:0.8em;opacity:0.7">별것 아닌 것 같아도 편하게 말해줘요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans6" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(6)">계속</button>
-  </div>
-  <div class="screen" id="screen-e6">
-    <div class="empathy-text" id="empathy-6"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-10')">← 다시 쓸게요</button><button class="btn" onclick="next(11)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-11">
-    <div class="q-num">07 / 10</div>
-    <div class="main-text">지난 한 해 중 가장 뿌듯했던 순간은<br>언제였나요?<br><span style="font-size:0.8em;opacity:0.7">작은 것도 괜찮아요. 남들이 몰라줘도 되는 것도요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans7" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(7)">이건 꼭 지키고 싶네요</button>
-  </div>
-  <div class="screen" id="screen-e7">
-    <div class="empathy-text" id="empathy-7"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-11')">← 다시 쓸게요</button><button class="btn" onclick="next(12)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-12">
-    <div class="q-num">08 / 10</div>
-    <div class="main-text">어린 시절, 시간 가는 줄 모르고<br>빠져들었던 것이 있나요?<br><span style="font-size:0.8em;opacity:0.7">공부 말고요. 😊</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans8" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(8)">이제 거의 다 왔어요</button>
-  </div>
-  <div class="screen" id="screen-e8">
-    <div class="empathy-text" id="empathy-8"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-12')">← 다시 쓸게요</button><button class="btn" onclick="next(13)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-13">
-    <div class="q-num">09 / 10</div>
-    <div class="main-text">살면서 스스로를 가장 다정하게<br>다독였던 순간이 있다면 들려주세요.<br><span style="font-size:0.8em;opacity:0.7">혹은 그러지 못했던 순간도 괜찮아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans9" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(9)">계속</button>
-  </div>
-  <div class="screen" id="screen-e9">
-    <div class="empathy-text" id="empathy-9"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-13')">← 다시 쓸게요</button><button class="btn" onclick="next(14)">계속</button></div>
-  </div>
-
-  <div class="screen" id="screen-14">
-    <div class="q-num">10 / 10</div>
-    <div class="main-text">마지막으로 — 지금 이 순간,<br>한 발짝만 더 나아간다면<br>어떤 방향으로 가고 싶으세요?<br><span style="font-size:0.8em;opacity:0.7">막연해도 괜찮아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans10" placeholder="여기에 답변을 입력하세요..."></textarea></div>
-    <button class="btn" onclick="saveAns(10)">어렵지요, 자기 얘기가</button>
-  </div>
-  <div class="screen" id="screen-e10">
-    <div class="empathy-text" id="empathy-10"></div>
-    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-14')">← 다시 쓸게요</button><button class="btn" onclick="next(15)">계속</button></div>
+  <!-- 공감 멘트 화면 — 동적으로 채워짐 -->
+  <div class="screen" id="screen-empathy">
+    <div class="empathy-text" id="empathyText"></div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBackToQuestion()">← 다시 쓸게요</button>
+      <button class="btn" onclick="nextQuestion()">계속</button>
+    </div>
   </div>
 
   <!-- 화면 15: A 문장 -->
@@ -370,7 +278,7 @@
       <div class="essay-body" id="essayBody"></div>
       <div class="divider"></div>
     </div>
-    <button class="btn" onclick="next(16)" style="margin-top:24px">계속</button>
+    <button class="btn" onclick="showScreen('screen-16')" style="margin-top:24px">계속</button>
   </div>
 
   <!-- 화면 16: 엔딩 -->
@@ -390,6 +298,74 @@
 
 <script>
   let userName = '', weather = '', purpose = '', answers = {};
+  let currentQIndex = 0;
+  let questions = [];
+
+  // 목적별 질문 데이터 — 각각 꺼내기 / 다독이기 / 자신을 바라보기
+  const questionSets = {
+    discover: [
+      { text: '요즘 나에 대해 가장 궁금한 게 뭐예요?\n막연해도 괜찮아요.', btn: '계속' },
+      { text: '시간 가는 줄 모르고 빠져든 적이 있어요?\n언제든, 어떤 것이든요.', btn: '계속' },
+      { text: '친구들이 당신한테 자주 하는 말이 있어요?\n본인은 "이게 뭐가 대단해?" 했던 것도요.', btn: '이것도 재능이 될까요' },
+      { text: '살면서 가장 나다웠던 순간이 언제예요?\n아주 잠깐이어도 괜찮아요.', btn: '계속' },
+      { text: '스스로 가장 마음에 드는 나의 모습은요?\n남들이 몰라줘도 되는 것도요.', btn: '계속' },
+      { text: '지금의 나를 만든 것 중에\n가장 큰 것이 뭔 것 같아요?\n경험이어도, 사람이어도, 말 한마디어도요.', btn: '계속' },
+      { text: '1년 후의 나한테\n한 마디 해줄 수 있다면요?', btn: '이 여정이 끝나가요' }
+    ],
+    worry: [
+      { text: '요즘 가장 마음에 걸리는 게 뭐예요?\n말로 잘 안 돼도, 느낌으로라도 꺼내봐요.', btn: '계속' },
+      { text: '그 고민, 얼마나 됐어요?\n언제부터 이 무게를 들고 다닌 것 같아요?', btn: '계속' },
+      { text: '그 고민을 혼자 안고 있던 이유가 있어요?\n말하기 어려운 이유가 있었나요?', btn: '계속' },
+      { text: '그 무게를 혼자 들고 여기까지 왔네요.\n지금 스스로한테 해주고 싶은 말이 있어요?', btn: '계속' },
+      { text: '이 고민 속에서도\n당신이 끝까지 지키고 싶은 게 있다면요?', btn: '계속' },
+      { text: '이 고민을 안고 있는 당신,\n지금 스스로 어떻게 보여요?\n따뜻하게 봐줘도 괜찮아요.', btn: '계속' },
+      { text: '이 고민이 없어진다면\n당신 하루가 어떻게 달라질 것 같아요?', btn: '이 여정이 끝나가요' }
+    ],
+    diary: [
+      { text: '오늘 하루를 한 단어로 표현하면요?\n맞고 틀리고 없어요.', btn: '계속' },
+      { text: '오늘 가장 기억에 남는 장면이 있어요?\n대단한 거 아니어도 괜찮아요.', btn: '계속' },
+      { text: '오늘 가장 잘한 것 하나만 꼽는다면요?\n아주 작은 것도 괜찮아요.', btn: '계속' },
+      { text: '오늘 하루,\n스스로한테 해주고 싶은 말이 있어요?', btn: '계속' },
+      { text: '오늘 하루 중에\n가장 나다웠던 순간이 언제예요?', btn: '계속' },
+      { text: '내일 아침 눈을 떴을 때\n가장 먼저 하고 싶은 게 뭐예요?', btn: '이 여정이 끝나가요' }
+    ],
+    just: [
+      { text: '요즘 어떻게 지내고 있어요?\n특별한 거 말고, 그냥 요즘.', btn: '계속' },
+      { text: '오늘 하루 중에\n아주 잠깐이라도 숨이 쉬어진 순간이 있었어요?\n커피 한 모금이어도, 하늘을 잠깐 봤어도 괜찮아요.', btn: '계속' },
+      { text: '아무 생각 없이 할 수 있는 것 중에\n그래도 좋아하는 게 있어요?\n잘하는 거 말고, 그냥 좋은 거요.', btn: '계속' },
+      { text: '같이 있으면 이유 없이 편안한 사람이 있어요?\n어떤 사람이에요?', btn: '계속' },
+      { text: '요즘 한 번쯤 해보고 싶다는 생각이\n스치고 지나간 게 있어요?\n진짜로 할 수 있는지 없는지는 상관없어요.', btn: '계속' },
+      { text: '지금 여기까지 얘기하고 나서\n마음이 어때요?\n아까랑 같아요, 아니면 조금 달라요?', btn: '이 여정이 끝나가요' }
+    ]
+  };
+
+  // 날씨 × 목적 공감 멘트 (꺼내기/다독이기/자신을바라보기 단계별)
+  const empathySets = {
+    discover: {
+      sunny: ['궁금하다는 것 자체가\n이미 당신 안에 뭔가 있다는 거예요.','그 몰입의 순간,\n당신의 진짜 색깔이 거기 있어요.','남들 눈에 쉬워 보이는 것,\n그게 바로 당신의 황금 삽이에요.','그 순간의 당신,\n가장 빛났을 것 같아요.','그 모습,\n남들이 몰라줘도 진짜예요.','그것들이 모여서\n지금의 당신이 됐어요.','그 한 마디가\n1년 후의 당신한테 닿을 거예요.'],
+      cloudy: ['흐린 날에 자신을 궁금해하는 것,\n쉬운 일이 아니에요.','그 몰입,\n흐린 날에 더 선명하게 느껴지지 않아요?','흐린 날에도 빛나는 게 있어요.\n그게 바로 그거예요.','그 나다운 순간,\n흐린 날에도 빛났을 거예요.','흐려도 그 모습은 진짜예요.\n누가 뭐라 해도요.','흐린 날을 지나온 것들이\n지금의 당신을 만들었어요.','그 말,\n1년 후의 당신이 고마워할 거예요.'],
+      rainy: ['비 오는 날에 자신을 들여다보는 것,\n더 솔직해지잖아요.','빗속에서도 그 몰입은 살아있어요.\n진짜니까요.','비 오는 날엔 진짜만 남아요.\n그게 바로 그거예요.','비 오는 날의 그 순간,\n더 선명하게 기억될 거예요.','빗속에서도 그 모습은 빛나요.','비를 맞으며 만들어진 것들이\n가장 단단해요.','빗속에서 쓴 편지가\n가장 오래 남아요.'],
+      foggy: ['안개 속에서 자신을 궁금해하는 것,\n그게 이미 찾기 시작한 거예요.','안개 속에서도 그 몰입은 살아있었네요.\n그게 빛이에요.','안개 속에서도 빛나는 게 있어요.\n그게 바로 그거예요.','안개 속의 그 순간,\n사실 가장 나다운 때였을 수도 있어요.','안개 속에서도 그 모습은 진짜예요.','안개를 지나온 것들이\n지금의 당신이에요.','안개는 걷혀요.\n그 말이 그걸 도와줄 거예요.']
+    },
+    worry: {
+      sunny: ['맑은 날에 꺼낸 고민,\n더 선명하게 보이지 않아요?','그 무게를 얼마나 혼자 들고 다녔을까요.\n오늘 잘 꺼냈어요.','말하기 어려웠을 텐데\n오늘 꺼내줘서 고마워요.','그 말이 필요했던 거,\n이미 알고 있었던 거예요.','그걸 지키고 싶다는 것,\n그게 당신이에요.','그 고민을 안고 있는 당신,\n생각보다 훨씬 강한 사람이에요.','고민이 없어진 그 하루,\n멀지 않아요.'],
+      cloudy: ['흐린 날에 꺼낸 고민은\n더 무겁게 느껴질 수 있어요. 잘 꺼냈어요.','그 무게,\n흐린 날엔 더 무겁게 느껴지죠. 알아요.','흐린 날에 이걸 꺼낸다는 게\n쉬운 일이 아니에요.','흐려도 그 말은 진짜예요.\n스스로한테 해줘요.','흐린 날에도 지키고 싶은 게 있다는 것,\n그게 당신이에요.','흐린 날의 자신을 보는 것,\n용기 있는 일이에요.','흐림 뒤엔 맑음이 와요.\n늘 그랬던 것처럼.'],
+      rainy: ['비 오는 날에 고민을 꺼내는 건\n더 솔직한 거예요. 잘 했어요.','비 오는 날엔 혼자 들고 있는 게\n더 무겁게 느껴지죠.','빗속에서 이걸 꺼낸 것,\n쉬운 일이 아니에요.','비 오는 날 스스로한테 하는 말,\n더 깊이 새겨져요.','빗속에서도 지키고 싶은 게 있다는 것,\n그게 진짜 당신이에요.','비를 맞으면서도 자신을 보는 것,\n그게 용기예요.','비는 그쳐요.\n늘 그랬던 것처럼.'],
+      foggy: ['안개 낀 날에 고민을 꺼내는 건\n정말 용기 있는 일이에요.','안개 속에서 그 무게를 들고 있었네요.\n혼자 오래 들고 있었겠어요.','안개 낀 날에 이걸 꺼낸 것,\n정말 잘 했어요.','안개 속에서 스스로한테 하는 말,\n가장 진실된 말이에요.','안개 속에서도 지키고 싶은 게 있네요.\n그게 빛이에요.','안개 속에서 자신을 보는 것,\n그게 이미 안개를 걷는 거예요.','안개는 걷혀요.\n그 하루가 기다리고 있어요.']
+    },
+    diary: {
+      sunny: ['그 한 단어 안에\n오늘이 다 담겨있어요.','맑은 날에 기억된 그 장면,\n오늘의 선물이에요.','작은 것도 잘한 거예요.\n오늘도 충분했어요.','그 말,\n스스로한테 꼭 해줘요.','그 순간이 오늘의 당신이에요.','내일의 당신이\n오늘의 당신한테 고마워할 거예요.'],
+      cloudy: ['흐린 날에 찾은 그 단어,\n솔직한 거예요.','흐린 날에 기억된 것들이\n더 오래 남아요.','흐린 날에도 잘한 게 있었네요.\n충분해요.','흐린 날 스스로한테 하는 말,\n더 깊이 새겨져요.','흐린 날의 나다운 순간,\n더 진짜예요.','흐림 뒤엔 맑음이 와요.\n내일도요.'],
+      rainy: ['비 오는 날의 그 단어,\n가장 솔직한 오늘이에요.','비 오는 날에 기억된 그 장면,\n더 선명하게 남을 거예요.','비 오는 날에도 잘한 게 있었어요.\n정말로요.','빗속에서 스스로한테 하는 말,\n가장 진실된 말이에요.','비 오는 날의 나다운 순간,\n더 빛나요.','비는 그쳐요.\n내일 아침엔 달라져 있을 거예요.'],
+      foggy: ['안개 낀 날에 찾은 그 단어,\n용기 있는 표현이에요.','안개 속에서 기억된 그 장면,\n소중한 거예요.','안개 낀 날에도 잘한 게 있었네요.\n그것만으로 충분해요.','안개 속에서 스스로한테 하는 말,\n가장 필요한 말이에요.','안개 낀 날의 나다운 순간,\n사실 가장 진짜인 순간이에요.','안개는 걷혀요.\n내일 아침엔 조금 더 선명해질 거예요.']
+    },
+    just: {
+      sunny: ['그냥이라고 했는데\n맑은 날에 여기 왔네요. 잘 왔어요.','그 잠깐의 숨,\n사실 하루 중 가장 당신다운 순간이에요.','아무 생각 없이 좋다는 것,\n그게 진짜 좋아하는 거예요.','그 사람 곁에서의 당신,\n편안한 사람이에요.','스쳐도 괜찮아요.\n스친 것만으로도 충분히 의미 있어요.','조금 달라졌다면,\n그게 오늘 여기 온 이유예요.'],
+      cloudy: ['그냥이라고 했는데\n흐린 날에 여기 왔네요. 잘 왔어요.','흐린 날에 그 잠깐의 숨,\n더 소중해요.','흐린 날에도 좋아하는 게 있네요.\n그게 당신이에요.','흐린 날에도 편안한 사람이 있다는 것,\n작은 행복이에요.','흐린 날에 스쳐간 것,\n사실 오래 마음에 남을 거예요.','흐려도 조금 달라졌다면,\n그걸로 충분해요.'],
+      rainy: ['그냥이라고 했는데\n비 오는 날에 여기 왔네요. 잘 왔어요.','비 오는 날의 그 잠깐,\n더 선명하게 느껴지지 않아요?','빗속에서도 좋아하는 게 있네요.\n그게 진짜예요.','비 오는 날에도 편안한 사람이 있다는 것,\n그게 당신의 온기예요.','빗속에서 스쳐간 것,\n더 진짜예요.','비 오는 날에 조금 달라졌다면,\n그게 이 시간의 선물이에요.'],
+      foggy: ['그냥이라고 했는데\n안개 낀 날에 여기 왔네요.\n나는 당신의 그냥을 받아주러 그냥 여기 있었어요.','안개 속에서의 그 잠깐,\n사실 가장 당신다운 순간이에요.','안개 속에서도 좋아하는 게 있었네요.\n그게 빛이에요.','안개 낀 날에도 편안한 사람이 있다는 것,\n소중한 거예요.','안개 속에서 스쳐간 것,\n사실 가장 진짜인 바람이에요.','안개 속에서도 조금 달라졌다면,\n안개가 걷히기 시작한 거예요.']
+    }
+  };
 
   const weatherThemes = {
     sunny: { overlay: 'linear-gradient(to bottom, rgba(255,220,100,0.08) 0%, rgba(255,200,50,0.04) 40%, rgba(58,74,52,0.3) 70%, rgba(40,60,40,0.6) 100%)', fog: '0.06', rain: false },
@@ -431,7 +407,10 @@
     } else { rain.style.opacity = '0'; }
   }
 
-  function updateProgress(s) { document.getElementById('progressBar').style.width = Math.min((s / 28) * 100, 100) + '%'; }
+  function updateProgress(current, total) {
+    const pct = Math.min((current / (total + 4)) * 100, 95);
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
 
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -440,14 +419,16 @@
     window.scrollTo(0, 0);
   }
 
-  function next(n) { updateProgress(n); showScreen('screen-' + n); }
-  function selectPurpose(p) { purpose = p; next(2); }
+  function selectPurpose(p) {
+    purpose = p;
+    showScreen('screen-2');
+  }
 
   function selectWeather(w) {
     weather = w;
     applyWeatherTheme(w);
     document.getElementById('weatherMsg').innerText = weatherMessages[w];
-    updateProgress(3); showScreen('screen-3');
+    showScreen('screen-3');
   }
 
   function saveName() {
@@ -456,26 +437,61 @@
     userName = val;
     document.getElementById('endingName').innerText = userName;
     document.getElementById('endingName2').innerText = userName;
-    updateProgress(5); showScreen('screen-5');
+    questions = questionSets[purpose] || questionSets['just'];
+    currentQIndex = 0;
+    answers = {};
+    loadQuestion(0);
   }
 
-  function saveAns(n) {
-    const el = document.getElementById('ans' + n);
-    if (el) answers[n] = el.value;
-    const msgs = empathyByWeather[weather] || empathyByWeather['foggy'];
-    const empEl = document.getElementById('empathy-' + n);
-    if (empEl) empEl.innerText = msgs[n - 1];
-    updateProgress(n * 2 + 4); showScreen('screen-e' + n);
+  function loadQuestion(index) {
+    const q = questions[index];
+    const total = questions.length;
+    document.getElementById('qNum').innerText = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+    document.getElementById('qText').innerText = q.text;
+    document.getElementById('qBtn').innerText = q.btn;
+    document.getElementById('qAnswer').value = answers[index] || '';
+    updateProgress(index + 1, total);
+    showScreen('screen-q');
+    setTimeout(() => document.getElementById('qAnswer').focus(), 400);
+  }
+
+  function submitAnswer() {
+    const val = document.getElementById('qAnswer').value;
+    answers[currentQIndex] = val;
+
+    // 공감 멘트 — 날씨 × 목적
+    const empSet = (empathySets[purpose] || empathySets['just'])[weather] ||
+                   (empathySets[purpose] || empathySets['just'])['foggy'];
+    const msg = empSet[currentQIndex] || '잘 들었어요.\n고마워요.';
+    document.getElementById('empathyText').innerText = msg;
+    showScreen('screen-empathy');
+  }
+
+  function goBackToQuestion() {
+    loadQuestion(currentQIndex);
+  }
+
+  function nextQuestion() {
+    currentQIndex++;
+    if (currentQIndex < questions.length) {
+      loadQuestion(currentQIndex);
+    } else {
+      // 모든 질문 완료 → A 문장
+      document.getElementById('progressBar').style.width = '95%';
+      showScreen('screen-15');
+    }
   }
 
   function restart() {
     userName = ''; weather = ''; purpose = ''; answers = {};
+    currentQIndex = 0; questions = [];
     document.querySelectorAll('textarea').forEach(t => t.value = '');
     document.getElementById('nameInput').value = '';
     document.getElementById('weatherOverlay').style.background = '';
     document.getElementById('rainContainer').style.opacity = '0';
     ['fog1','fog2','fog3','fog4'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('opacity', '0.22'); });
-    updateProgress(0); showScreen('screen-0');
+    document.getElementById('progressBar').style.width = '0%';
+    showScreen('screen-0');
   }
 
   document.addEventListener('keydown', function(e) {
@@ -487,16 +503,20 @@
 
   async function generateEssay() {
     showScreen('screen-loading');
+    // answers를 1-based index로 변환
+    const answersForApi = {};
+    Object.keys(answers).forEach(k => { answersForApi[parseInt(k) + 1] = answers[k]; });
     try {
       const response = await fetch('/.netlify/functions/essay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: userName, weather, purpose, answers })
+        body: JSON.stringify({ name: userName, weather, purpose, answers: answersForApi })
       });
       const data = await response.json();
       document.getElementById('essayTo').innerText = `✦  ${userName}님에게  ✦`;
       document.getElementById('essayBody').innerText = data.essay;
       document.getElementById('endingName2').innerText = userName;
+      document.getElementById('progressBar').style.width = '100%';
       showScreen('screen-essay');
     } catch (err) {
       document.getElementById('essayTo').innerText = `✦  ${userName}님에게  ✦`;
