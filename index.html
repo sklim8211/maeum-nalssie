@@ -859,18 +859,14 @@ ${answerText}
 에세이만 써주세요. 다른 설명은 필요 없어요.`;
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/.netlify/functions/essay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
-        })
+        body: JSON.stringify({ name: userName, weather, answers })
       });
 
       const data = await response.json();
-      const essay = data.content[0].text;
+      const essay = data.essay;
 
       document.getElementById('essayTo').innerText = `✦  ${userName}님에게  ✦`;
       document.getElementById('essayBody').innerText = essay;
