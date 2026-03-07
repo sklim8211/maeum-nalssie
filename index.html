@@ -11,11 +11,8 @@
     --teal-dark: #2da89f;
     --bg: #3a4a52;
     --text: #e8f4f0;
-    --soft: rgba(255,255,255,0.15);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: 'Nanum Myeongjo', serif;
     background: var(--bg);
@@ -24,368 +21,104 @@
     overflow: hidden;
     position: relative;
   }
-
-  /* 배경 — 안개 낀 숲 */
-  .bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
+  .bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+  .bg svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+  .weather-overlay {
+    position: fixed; inset: 0; z-index: 1;
+    transition: background 1.5s ease;
+    background: linear-gradient(to bottom, rgba(58,74,82,0.3) 0%, rgba(58,74,82,0.1) 40%, rgba(58,74,82,0.4) 70%, rgba(58,74,82,0.7) 100%);
   }
-
-  .bg svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0; left: 0;
+  .rain-container { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
+  .raindrop {
+    position: absolute; width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(180,210,255,0.6));
+    animation: fall linear infinite;
   }
-
-  /* 안개 오버레이 */
-  .fog {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(
-      to bottom,
-      rgba(58,74,82,0.3) 0%,
-      rgba(58,74,82,0.1) 40%,
-      rgba(58,74,82,0.4) 70%,
-      rgba(58,74,82,0.7) 100%
-    );
+  @keyframes fall {
+    from { transform: translateY(-100px); opacity: 0.8; }
+    to { transform: translateY(110vh); opacity: 0; }
   }
-
-  /* 메인 컨테이너 */
   .app {
-    position: relative;
-    z-index: 2;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
+    position: relative; z-index: 3; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;
   }
-
-  /* 화면 슬라이드 */
   .screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
-    animation: fadeUp 0.7s ease forwards;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; max-width: 600px; width: 100%; animation: fadeUp 0.7s ease forwards;
   }
-
-  .screen.active {
-    display: flex;
-  }
-
+  .screen.active { display: flex; }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
-  /* 앱 타이틀 */
-  .app-title {
-    font-size: 13px;
-    letter-spacing: 6px;
-    color: var(--teal);
-    opacity: 0.7;
-    margin-bottom: 48px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-  }
-
-  /* 메인 텍스트 */
-  .main-text {
-    font-size: clamp(17px, 3.8vw, 24px);
-    line-height: 1.85;
-    color: var(--text);
-    margin-bottom: 12px;
-    font-weight: 400;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .main-text.quote::before {
-    content: '"';
-    color: var(--teal);
-    font-size: 1.3em;
-    opacity: 0.6;
-  }
-  .main-text.quote::after {
-    content: '"';
-    color: var(--teal);
-    font-size: 1.3em;
-    opacity: 0.6;
-  }
-
-  /* 서브 텍스트 */
-  .sub-text {
-    font-size: clamp(14px, 3vw, 17px);
-    color: var(--teal);
-    opacity: 0.75;
-    margin-bottom: 48px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    line-height: 1.8;
-  }
-
-  /* 날씨 선택 버튼들 */
-  .weather-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    max-width: 420px;
-    margin-bottom: 24px;
-  }
-
+  .app-title { font-size: 13px; letter-spacing: 6px; color: var(--teal); opacity: 0.7; margin-bottom: 48px; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; }
+  .main-text { font-size: clamp(17px, 3.8vw, 24px); line-height: 1.85; color: var(--text); margin-bottom: 12px; font-weight: 400; word-break: keep-all; overflow-wrap: break-word; }
+  .sub-text { font-size: clamp(14px, 3vw, 17px); color: var(--teal); opacity: 0.75; margin-bottom: 32px; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; line-height: 1.8; }
+  .weather-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 420px; margin-bottom: 24px; }
   .weather-btn {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(78,205,196,0.3);
-    border-radius: 4px;
-    padding: 16px 24px;
-    color: var(--text);
-    font-family: 'Nanum Myeongjo', serif;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(78,205,196,0.3); border-radius: 4px;
+    padding: 16px 24px; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 16px;
+    cursor: pointer; text-align: left; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px;
   }
-
-  .weather-btn:hover {
-    background: rgba(78,205,196,0.15);
-    border-color: var(--teal);
-    transform: translateX(4px);
+  .weather-btn:hover { background: rgba(78,205,196,0.15); border-color: var(--teal); transform: translateX(4px); }
+  .weather-btn .label { font-size: 11px; color: var(--teal); font-family: 'Noto Sans KR', sans-serif; font-weight: 300; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+  .purpose-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 440px; margin-bottom: 24px; }
+  .purpose-btn {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(78,205,196,0.25); border-radius: 4px;
+    padding: 14px 20px; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 15px;
+    cursor: pointer; text-align: left; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px;
   }
-
-  .weather-btn .label {
-    font-size: 11px;
-    color: var(--teal);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    letter-spacing: 1px;
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  /* 텍스트 입력 */
-  .input-wrap {
-    width: 100%;
-    max-width: 500px;
-    margin-bottom: 32px;
-  }
-
+  .purpose-btn:hover { background: rgba(78,205,196,0.12); border-color: var(--teal); transform: translateX(4px); }
+  .input-wrap { width: 100%; max-width: 500px; margin-bottom: 32px; }
   .text-input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(78,205,196,0.4);
-    padding: 12px 0;
-    color: var(--text);
-    font-family: 'Nanum Myeongjo', serif;
-    font-size: 18px;
-    outline: none;
-    transition: border-color 0.3s;
-    text-align: center;
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(78,205,196,0.4);
+    padding: 12px 0; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 18px;
+    outline: none; transition: border-color 0.3s; text-align: center;
   }
-
-  .text-input::placeholder {
-    color: rgba(232,244,240,0.3);
-    font-size: 16px;
-  }
-
-  .text-input:focus {
-    border-color: var(--teal);
-  }
-
+  .text-input::placeholder { color: rgba(232,244,240,0.3); font-size: 16px; }
+  .text-input:focus { border-color: var(--teal); }
   .textarea-input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(78,205,196,0.4);
-    padding: 12px 0;
-    color: var(--text);
-    font-family: 'Nanum Myeongjo', serif;
-    font-size: 17px;
-    outline: none;
-    resize: none;
-    min-height: 80px;
-    transition: border-color 0.3s;
-    line-height: 1.8;
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(78,205,196,0.4);
+    padding: 12px 0; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 17px;
+    outline: none; resize: none; min-height: 80px; transition: border-color 0.3s; line-height: 1.8;
   }
-
-  .textarea-input::placeholder {
-    color: rgba(232,244,240,0.3);
-    font-size: 15px;
-  }
-
-  .textarea-input:focus {
-    border-color: var(--teal);
-  }
-
-  /* 버튼 */
+  .textarea-input::placeholder { color: rgba(232,244,240,0.3); font-size: 15px; }
+  .textarea-input:focus { border-color: var(--teal); }
   .btn {
-    background: var(--teal-dark);
-    border: none;
-    border-radius: 3px;
-    padding: 14px 36px;
-    color: white;
-    font-family: 'Nanum Myeongjo', serif;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
+    background: var(--teal-dark); border: none; border-radius: 3px; padding: 14px 36px;
+    color: white; font-family: 'Nanum Myeongjo', serif; font-size: 16px; cursor: pointer;
+    transition: all 0.3s ease; letter-spacing: 1px;
   }
-
-  .btn:hover {
-    background: var(--teal);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(78,205,196,0.3);
+  .btn:hover { background: var(--teal); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(78,205,196,0.3); }
+  .btn-row { display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .btn-back {
+    background: transparent; border: 1px solid rgba(78,205,196,0.35); border-radius: 3px;
+    padding: 13px 24px; color: rgba(232,244,240,0.6); font-family: 'Nanum Myeongjo', serif;
+    font-size: 15px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 1px;
   }
-
-  /* 진행 표시 */
-  .progress {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: rgba(78,205,196,0.15);
-    z-index: 10;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background: var(--teal);
-    transition: width 0.5s ease;
-  }
-
-  /* 질문 번호 */
-  .q-num {
-    font-size: 12px;
-    color: var(--teal);
-    opacity: 0.5;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-  }
-
-  /* 공감 멘트 화면 */
-  .empathy-text {
-    font-size: clamp(18px, 3.8vw, 24px);
-    line-height: 1.85;
-    color: var(--text);
-    margin-bottom: 48px;
-    word-break: keep-all;
-  }
-
-  /* 엔딩 */
-  .ending-text {
-    font-size: clamp(15px, 3.2vw, 20px);
-    line-height: 2;
-    color: var(--text);
-    margin-bottom: 48px;
-    word-break: keep-all;
-  }
-
-  .ending-name {
-    color: var(--teal);
-    font-weight: 700;
-  }
-
-  /* 구분선 */
-  .divider {
-    width: 60px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--teal), transparent);
-    margin: 24px auto;
-  }
-
-  /* 로딩 */
-  .loading-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-  }
-
-  .loading-dots {
-    display: flex;
-    gap: 10px;
-  }
-
-  .loading-dots span {
-    width: 8px;
-    height: 8px;
-    background: var(--teal);
-    border-radius: 50%;
-    animation: bounce 1.2s ease-in-out infinite;
-  }
-
+  .btn-back:hover { border-color: var(--teal); color: var(--teal); }
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: rgba(78,205,196,0.15); z-index: 10; }
+  .progress-bar { height: 100%; background: var(--teal); transition: width 0.5s ease; }
+  .q-num { font-size: 12px; color: var(--teal); opacity: 0.5; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; }
+  .empathy-text { font-size: clamp(17px, 3.8vw, 22px); line-height: 1.95; color: var(--text); margin-bottom: 36px; word-break: keep-all; white-space: pre-wrap; }
+  .ending-text { font-size: clamp(15px, 3.2vw, 20px); line-height: 2; color: var(--text); margin-bottom: 48px; word-break: keep-all; }
+  .ending-name { color: var(--teal); font-weight: 700; }
+  .divider { width: 60px; height: 1px; background: linear-gradient(to right, transparent, var(--teal), transparent); margin: 24px auto; }
+  .loading-wrap { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+  .loading-dots { display: flex; gap: 10px; }
+  .loading-dots span { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
   .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
   .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes bounce {
-    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-
-  .loading-text {
-    font-size: 16px;
-    color: var(--teal);
-    opacity: 0.75;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    line-height: 1.8;
-    text-align: center;
-  }
-
-  /* 에세이 */
-  .essay-wrap {
-    width: 100%;
-    max-width: 560px;
-    max-height: 65vh;
-    overflow-y: auto;
-    padding: 0 4px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(78,205,196,0.3) transparent;
-  }
-
-  .essay-to {
-    font-size: 14px;
-    letter-spacing: 4px;
-    color: var(--teal);
-    opacity: 0.8;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    margin-bottom: 8px;
-  }
-
-  .essay-body {
-    font-size: clamp(15px, 3vw, 18px);
-    line-height: 2.1;
-    color: var(--text);
-    text-align: left;
-    white-space: pre-wrap;
-    word-break: keep-all;
-  }
-
-  /* 반응형 */
-  @media (max-width: 480px) {
-    .app { padding: 30px 16px; }
-    .weather-btn { padding: 14px 18px; font-size: 15px; }
-  }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+  .loading-text { font-size: 16px; color: var(--teal); opacity: 0.75; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; line-height: 1.8; text-align: center; }
+  .essay-wrap { width: 100%; max-width: 560px; max-height: 65vh; overflow-y: auto; padding: 0 4px; scrollbar-width: thin; scrollbar-color: rgba(78,205,196,0.3) transparent; }
+  .essay-to { font-size: 14px; letter-spacing: 4px; color: var(--teal); opacity: 0.8; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; margin-bottom: 8px; }
+  .essay-body { font-size: clamp(15px, 3vw, 18px); line-height: 2.1; color: var(--text); text-align: left; white-space: pre-wrap; word-break: keep-all; }
+  @media (max-width: 480px) { .app { padding: 30px 16px; } .weather-btn { padding: 14px 18px; font-size: 15px; } .btn-row { flex-direction: column; } }
 </style>
 </head>
 <body>
 
-<!-- 배경 SVG — 안개 낀 숲 -->
 <div class="bg">
   <svg viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -397,77 +130,49 @@
         <stop offset="0%" stop-color="#7a9aaa" stop-opacity="0.5"/>
         <stop offset="100%" stop-color="#7a9aaa" stop-opacity="0"/>
       </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="8" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
     </defs>
-
-    <!-- 하늘 -->
     <rect width="800" height="900" fill="url(#skyGrad)"/>
-
-    <!-- 안개 레이어들 -->
-    <ellipse cx="400" cy="500" rx="600" ry="120" fill="#8aacbc" opacity="0.25"/>
-    <ellipse cx="200" cy="560" rx="400" ry="80" fill="#9abccc" opacity="0.20"/>
-    <ellipse cx="600" cy="540" rx="350" ry="70" fill="#8aacbc" opacity="0.18"/>
-    <ellipse cx="400" cy="620" rx="500" ry="90" fill="#7a9aaa" opacity="0.22"/>
-
-    <!-- 나무들 — 왼쪽 -->
+    <ellipse cx="400" cy="500" rx="600" ry="120" fill="#8aacbc" opacity="0.25" id="fog1"/>
+    <ellipse cx="200" cy="560" rx="400" ry="80" fill="#9abccc" opacity="0.20" id="fog2"/>
+    <ellipse cx="600" cy="540" rx="350" ry="70" fill="#8aacbc" opacity="0.18" id="fog3"/>
+    <ellipse cx="400" cy="620" rx="500" ry="90" fill="#7a9aaa" opacity="0.22" id="fog4"/>
     <g opacity="0.85">
-      <!-- 나무 1 -->
       <rect x="18" y="200" width="14" height="700" fill="#1a2830" rx="4"/>
       <ellipse cx="25" cy="180" rx="55" ry="80" fill="#1e3038"/>
       <ellipse cx="10" cy="220" rx="45" ry="65" fill="#223540"/>
       <ellipse cx="45" cy="200" rx="48" ry="70" fill="#1a2e38"/>
       <ellipse cx="25" cy="140" rx="42" ry="60" fill="#1e3038"/>
-
-      <!-- 나무 2 -->
       <rect x="72" y="280" width="11" height="620" fill="#182430" rx="3"/>
       <ellipse cx="78" cy="260" rx="44" ry="65" fill="#1e3040"/>
       <ellipse cx="62" cy="295" rx="36" ry="52" fill="#223545"/>
       <ellipse cx="95" cy="278" rx="38" ry="56" fill="#1a2e3c"/>
       <ellipse cx="78" cy="220" rx="35" ry="50" fill="#1e3040"/>
-
-      <!-- 나무 3 (희미) -->
       <rect x="130" y="350" width="9" height="550" fill="#1a2830" rx="3" opacity="0.6"/>
       <ellipse cx="135" cy="330" rx="38" ry="55" fill="#1e3038" opacity="0.6"/>
-      <ellipse cx="120" cy="360" rx="30" ry="44" fill="#223540" opacity="0.5"/>
     </g>
-
-    <!-- 나무들 — 오른쪽 -->
     <g opacity="0.85">
-      <!-- 나무 1 -->
       <rect x="768" y="200" width="14" height="700" fill="#1a2830" rx="4"/>
       <ellipse cx="775" cy="180" rx="55" ry="80" fill="#1e3038"/>
       <ellipse cx="790" cy="220" rx="45" ry="65" fill="#223540"/>
       <ellipse cx="755" cy="200" rx="48" ry="70" fill="#1a2e38"/>
       <ellipse cx="775" cy="140" rx="42" ry="60" fill="#1e3038"/>
-
-      <!-- 나무 2 -->
       <rect x="717" y="280" width="11" height="620" fill="#182430" rx="3"/>
       <ellipse cx="722" cy="260" rx="44" ry="65" fill="#1e3040"/>
       <ellipse cx="738" cy="295" rx="36" ry="52" fill="#223545"/>
       <ellipse cx="705" cy="278" rx="38" ry="56" fill="#1a2e3c"/>
       <ellipse cx="722" cy="220" rx="35" ry="50" fill="#1e3040"/>
-
-      <!-- 나무 3 (희미) -->
       <rect x="661" y="350" width="9" height="550" fill="#1a2830" rx="3" opacity="0.6"/>
       <ellipse cx="665" cy="330" rx="38" ry="55" fill="#1e3038" opacity="0.6"/>
-      <ellipse cx="680" cy="360" rx="30" ry="44" fill="#223540" opacity="0.5"/>
     </g>
-
-    <!-- 바닥 안개 -->
     <rect x="0" y="750" width="800" height="150" fill="#5a7888" opacity="0.35"/>
     <ellipse cx="400" cy="780" rx="500" ry="60" fill="#6a8898" opacity="0.30"/>
-
-    <!-- 상단 안개 -->
     <rect x="0" y="0" width="800" height="120" fill="url(#fogGrad)"/>
   </svg>
 </div>
 
-<div class="fog"></div>
+<div class="weather-overlay" id="weatherOverlay"></div>
+<div class="rain-container" id="rainContainer"></div>
 
-<!-- 진행 바 -->
 <div class="progress">
   <div class="progress-bar" id="progressBar" style="width:0%"></div>
 </div>
@@ -483,12 +188,16 @@
     <button class="btn" onclick="next(1)">제 마음을 들킨 것 같아요</button>
   </div>
 
-  <!-- 화면 1 -->
+  <!-- 화면 1: 목적 선택 -->
   <div class="screen" id="screen-1">
-    <div class="main-text">그렇다고 게으른 게 아니에요.<br>그냥 아직 못 찾은 거예요.</div>
-    <div class="divider"></div>
-    <div class="sub-text">여기서는 답을 정해두지 않아도 돼요.<br>천천히, 당신 안의 이야기를 꺼내봐요.</div>
-    <button class="btn" onclick="next(2)">같이 가시죠</button>
+    <div class="main-text" style="margin-bottom:16px">오늘 여기 온 이유가 뭔가요?</div>
+    <div class="sub-text">어떤 이유든 괜찮아요</div>
+    <div class="purpose-grid">
+      <button class="purpose-btn" onclick="selectPurpose('discover')"><span>🌱</span><div>나 자신을 좀 더 알고 싶어요</div></button>
+      <button class="purpose-btn" onclick="selectPurpose('worry')"><span>💭</span><div>고민이 있어서 털어놓고 싶어요</div></button>
+      <button class="purpose-btn" onclick="selectPurpose('diary')"><span>📖</span><div>오늘 하루를 정리하고 싶어요</div></button>
+      <button class="purpose-btn" onclick="selectPurpose('just')"><span>🌫</span><div>그냥 왔어요. 이유는 없어요</div></button>
+    </div>
   </div>
 
   <!-- 화면 2: 날씨 선택 -->
@@ -496,22 +205,10 @@
     <div class="app-title">내 마음의 날씨</div>
     <div class="main-text" style="margin-bottom:32px">오늘 내 마음의 날씨는<br>어떤가요?</div>
     <div class="weather-grid">
-      <button class="weather-btn" onclick="selectWeather('sunny')">
-        <span>☀️</span>
-        <div><span class="label">맑음</span>오늘 꽤 괜찮은 날이에요</div>
-      </button>
-      <button class="weather-btn" onclick="selectWeather('cloudy')">
-        <span>⛅</span>
-        <div><span class="label">흐림</span>뭔가 좀 무거운 하루에요</div>
-      </button>
-      <button class="weather-btn" onclick="selectWeather('rainy')">
-        <span>🌧</span>
-        <div><span class="label">비</span>솔직히 좀 힘들어요</div>
-      </button>
-      <button class="weather-btn" onclick="selectWeather('foggy')">
-        <span>🌫</span>
-        <div><span class="label">안개</span>모르겠어요, 그냥 멍해요</div>
-      </button>
+      <button class="weather-btn" onclick="selectWeather('sunny')"><span>☀️</span><div><span class="label">맑음</span>오늘 꽤 괜찮은 날이에요</div></button>
+      <button class="weather-btn" onclick="selectWeather('cloudy')"><span>⛅</span><div><span class="label">흐림</span>뭔가 좀 무거운 하루에요</div></button>
+      <button class="weather-btn" onclick="selectWeather('rainy')"><span>🌧</span><div><span class="label">비</span>솔직히 좀 힘들어요</div></button>
+      <button class="weather-btn" onclick="selectWeather('foggy')"><span>🌫</span><div><span class="label">안개</span>모르겠어요, 그냥 멍해요</div></button>
     </div>
   </div>
 
@@ -530,145 +227,115 @@
     <button class="btn" onclick="saveName()">계속</button>
   </div>
 
-  <!-- 화면 5~14: 질문들 -->
+  <!-- 질문 1~10 + 공감 멘트 -->
   <div class="screen" id="screen-5">
     <div class="q-num">01 / 10</div>
     <div class="main-text">요즘 마음을 가장 따뜻하게 했던 순간을<br>하나 떠올려 볼까요?<br><span style="font-size:0.8em;opacity:0.7">그때의 감정을 자유롭게 들려주세요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans1" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans1" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(1)">계속</button>
   </div>
-
   <div class="screen" id="screen-e1">
-    <div class="empathy-text">그 순간을 기억하고 있다는 것 자체가,<br>당신에게 소중한 게 있다는 뜻이에요.</div>
-    <button class="btn" onclick="next(6)">계속</button>
+    <div class="empathy-text" id="empathy-1"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-5')">← 다시 쓸게요</button><button class="btn" onclick="next(6)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-6">
     <div class="q-num">02 / 10</div>
     <div class="main-text">지금 가장 마음에 걸리는 고민이 있다면<br>편하게 털어놓아요.<br><span style="font-size:0.8em;opacity:0.7">여기선 아무도 평가하지 않아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans2" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans2" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(2)">계속</button>
   </div>
-
   <div class="screen" id="screen-e2">
-    <div class="empathy-text">말하는 것만으로도 조금 가벼워질 수 있어요.<br>잘 들었어요.</div>
-    <button class="btn" onclick="next(7)">계속</button>
+    <div class="empathy-text" id="empathy-2"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-6')">← 다시 쓸게요</button><button class="btn" onclick="next(7)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-7">
     <div class="q-num">03 / 10</div>
     <div class="main-text">요즘 어떤 위로나 응원이 가장 필요한가요?<br><span style="font-size:0.8em;opacity:0.7">스스로에게 해주고 싶은 말도 좋아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans3" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans3" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(3)">계속</button>
   </div>
-
   <div class="screen" id="screen-e3">
-    <div class="empathy-text">당신이 원하는 그 말,<br>이미 당신 안에 있었네요.</div>
-    <button class="btn" onclick="next(8)">계속</button>
+    <div class="empathy-text" id="empathy-3"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-7')">← 다시 쓸게요</button><button class="btn" onclick="next(8)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-8">
     <div class="q-num">04 / 10</div>
     <div class="main-text">친구들이 자주 칭찬하는 당신의 모습이 있나요?<br><span style="font-size:0.8em;opacity:0.7">본인은 "이게 뭐가 대단해?"라고 넘겼던 것도 괜찮아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans4" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans4" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(4)">이것도 재능이 될까요</button>
   </div>
-
   <div class="screen" id="screen-e4">
-    <div class="empathy-text">남들 눈에 쉬워 보이는 것,<br>그게 바로 당신의 황금 삽일 수 있어요.</div>
-    <button class="btn" onclick="next(9)">계속</button>
+    <div class="empathy-text" id="empathy-4"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-8')">← 다시 쓸게요</button><button class="btn" onclick="next(9)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-9">
     <div class="q-num">05 / 10</div>
     <div class="main-text">돈도 시간도 신경 쓰지 않아도 된다면,<br>하루를 어떻게 보내고 싶으세요?<br><span style="font-size:0.8em;opacity:0.7">아주 사소한 것도 좋아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans5" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans5" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(5)">제가 꿈꾸는 삶이에요</button>
   </div>
-
   <div class="screen" id="screen-e5">
-    <div class="empathy-text">그 하루 안에 당신이 진짜 원하는<br>삶의 모양이 담겨 있어요.</div>
-    <button class="btn" onclick="next(10)">계속</button>
+    <div class="empathy-text" id="empathy-5"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-9')">← 다시 쓸게요</button><button class="btn" onclick="next(10)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-10">
     <div class="q-num">06 / 10</div>
     <div class="main-text">요즘 자기도 모르게 계속 찾아보게 되는<br>주제가 있나요?<br><span style="font-size:0.8em;opacity:0.7">별것 아닌 것 같아도 편하게 말해줘요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans6" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans6" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(6)">계속</button>
   </div>
-
   <div class="screen" id="screen-e6">
-    <div class="empathy-text">이유 없이 끌린다는 것,<br>그게 관심사의 시작이에요.</div>
-    <button class="btn" onclick="next(11)">계속</button>
+    <div class="empathy-text" id="empathy-6"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-10')">← 다시 쓸게요</button><button class="btn" onclick="next(11)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-11">
     <div class="q-num">07 / 10</div>
     <div class="main-text">지난 한 해 중 가장 뿌듯했던 순간은<br>언제였나요?<br><span style="font-size:0.8em;opacity:0.7">작은 것도 괜찮아요. 남들이 몰라줘도 되는 것도요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans7" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans7" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(7)">이건 꼭 지키고 싶네요</button>
   </div>
-
   <div class="screen" id="screen-e7">
-    <div class="empathy-text">그 뿌듯함 속에 당신이 소중히 여기는<br>가치가 살아있어요.</div>
-    <button class="btn" onclick="next(12)">계속</button>
+    <div class="empathy-text" id="empathy-7"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-11')">← 다시 쓸게요</button><button class="btn" onclick="next(12)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-12">
     <div class="q-num">08 / 10</div>
     <div class="main-text">어린 시절, 시간 가는 줄 모르고<br>빠져들었던 것이 있나요?<br><span style="font-size:0.8em;opacity:0.7">공부 말고요. 😊</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans8" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans8" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(8)">이제 거의 다 왔어요</button>
   </div>
-
   <div class="screen" id="screen-e8">
-    <div class="empathy-text">그때 그 몰입감,<br>사실 지금도 당신 안에 있어요.</div>
-    <button class="btn" onclick="next(13)">계속</button>
+    <div class="empathy-text" id="empathy-8"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-12')">← 다시 쓸게요</button><button class="btn" onclick="next(13)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-13">
     <div class="q-num">09 / 10</div>
     <div class="main-text">살면서 스스로를 가장 다정하게<br>다독였던 순간이 있다면 들려주세요.<br><span style="font-size:0.8em;opacity:0.7">혹은 그러지 못했던 순간도 괜찮아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans9" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans9" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(9)">계속</button>
   </div>
-
   <div class="screen" id="screen-e9">
-    <div class="empathy-text">그 이야기를 꺼내줘서 고마워요.<br>충분히 잘 해왔어요.</div>
-    <button class="btn" onclick="next(14)">계속</button>
+    <div class="empathy-text" id="empathy-9"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-13')">← 다시 쓸게요</button><button class="btn" onclick="next(14)">계속</button></div>
   </div>
 
   <div class="screen" id="screen-14">
     <div class="q-num">10 / 10</div>
     <div class="main-text">마지막으로 — 지금 이 순간,<br>한 발짝만 더 나아간다면<br>어떤 방향으로 가고 싶으세요?<br><span style="font-size:0.8em;opacity:0.7">막연해도 괜찮아요.</span></div>
-    <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="ans10" placeholder="여기에 답변을 입력하세요..."></textarea>
-    </div>
+    <div class="input-wrap" style="margin-top:28px"><textarea class="textarea-input" id="ans10" placeholder="여기에 답변을 입력하세요..."></textarea></div>
     <button class="btn" onclick="saveAns(10)">어렵지요, 자기 얘기가</button>
   </div>
-
   <div class="screen" id="screen-e10">
-    <div class="empathy-text">그 방향이,<br>당신의 나침반이에요.</div>
-    <button class="btn" onclick="next(15)">계속</button>
+    <div class="empathy-text" id="empathy-10"></div>
+    <div class="btn-row"><button class="btn-back" onclick="showScreen('screen-14')">← 다시 쓸게요</button><button class="btn" onclick="next(15)">계속</button></div>
   </div>
 
   <!-- 화면 15: A 문장 -->
@@ -685,18 +352,16 @@
     <button class="btn" onclick="generateEssay()">나만의 이야기 받아보기</button>
   </div>
 
-  <!-- 로딩 화면 -->
+  <!-- 로딩 -->
   <div class="screen" id="screen-loading">
     <div class="app-title">내 마음의 날씨</div>
     <div class="loading-wrap">
-      <div class="loading-dots">
-        <span></span><span></span><span></span>
-      </div>
+      <div class="loading-dots"><span></span><span></span><span></span></div>
       <div class="loading-text">당신의 이야기를 읽고 있어요<br>잠깐만요 🌱</div>
     </div>
   </div>
 
-  <!-- 에세이 화면 -->
+  <!-- 에세이 -->
   <div class="screen" id="screen-essay">
     <div class="app-title">내 마음의 날씨</div>
     <div class="essay-wrap">
@@ -714,8 +379,7 @@
     <div class="ending-text">
       문을 열고 나가면<br>
       어제와 같은 하늘이지만<br>
-      당신은 조금 달라져 있을 거예요. 🌱<br>
-      <br>
+      당신은 조금 달라져 있을 거예요. 🌱<br><br>
       <span id="endingName2" style="color:var(--teal)"></span>님
     </div>
     <div class="divider"></div>
@@ -725,158 +389,118 @@
 </div>
 
 <script>
-  let userName = '';
-  let weather = '';
-  let answers = {};
-  let currentScreen = 'screen-0';
+  let userName = '', weather = '', purpose = '', answers = {};
 
-  const weatherMessages = {
-    sunny: '"마음도 상쾌해지는 기분.\n맑은 날엔 멀리까지 잘 보이잖아요.\n오늘, 당신 안도 한번 멀리 들여다봐요."',
-    cloudy: '"흐린 날엔 햇빛이 없어도\n세상이 조용하고 부드러워지잖아요.\n오늘 그 조용함 속에서\n당신 이야기를 들어볼게요."',
-    rainy: '"비 오는 날엔 괜히 마음이 솔직해지죠.\n그 솔직함, 오늘 여기서 마음껏 꺼내봐요.\n다 받아줄게요."',
-    foggy: '"안개 낀 날엔 앞이 잘 안 보이죠.\n근데 있잖아요 —\n안개는 걷혀요. 늘 그랬던 것처럼.\n천천히 같이 걸어봐요."'
+  const weatherThemes = {
+    sunny: { overlay: 'linear-gradient(to bottom, rgba(255,220,100,0.08) 0%, rgba(255,200,50,0.04) 40%, rgba(58,74,52,0.3) 70%, rgba(40,60,40,0.6) 100%)', fog: '0.06', rain: false },
+    cloudy: { overlay: 'linear-gradient(to bottom, rgba(58,74,82,0.4) 0%, rgba(58,74,82,0.15) 40%, rgba(58,74,82,0.45) 70%, rgba(40,55,65,0.75) 100%)', fog: '0.30', rain: false },
+    rainy: { overlay: 'linear-gradient(to bottom, rgba(30,50,70,0.5) 0%, rgba(30,50,70,0.2) 40%, rgba(30,50,70,0.5) 70%, rgba(20,35,50,0.8) 100%)', fog: '0.12', rain: true },
+    foggy: { overlay: 'linear-gradient(to bottom, rgba(90,110,120,0.5) 0%, rgba(90,110,120,0.3) 40%, rgba(70,90,100,0.55) 70%, rgba(50,70,80,0.8) 100%)', fog: '0.50', rain: false }
   };
 
-  const totalSteps = 28;
-  let step = 0;
+  const weatherMessages = {
+    sunny: '마음도 상쾌해지는 기분.\n맑은 날엔 멀리까지 잘 보이잖아요.\n오늘, 당신 안도 한번 멀리 들여다봐요.',
+    cloudy: '흐린 날엔 햇빛이 없어도\n세상이 조용하고 부드러워지잖아요.\n오늘 그 조용함 속에서\n당신 이야기를 들어볼게요.',
+    rainy: '비 오는 날엔 괜히 마음이 솔직해지죠.\n그 솔직함, 오늘 여기서 마음껏 꺼내봐요.\n다 받아줄게요.',
+    foggy: '안개 낀 날엔 앞이 잘 안 보이죠.\n근데 있잖아요 —\n안개는 걷혀요. 늘 그랬던 것처럼.\n천천히 같이 걸어봐요.'
+  };
 
-  function updateProgress(s) {
-    step = s;
-    const pct = Math.min((s / totalSteps) * 100, 100);
-    document.getElementById('progressBar').style.width = pct + '%';
+  const empathyByWeather = {
+    sunny: ['그 순간을 기억하고 있다는 것 자체가,\n당신에게 소중한 게 있다는 뜻이에요.','말하는 것만으로도 조금 가벼워질 수 있어요.\n잘 들었어요.','당신이 원하는 그 말,\n이미 당신 안에 있었네요.','남들 눈에 쉬워 보이는 것,\n그게 바로 당신의 황금 삽일 수 있어요.','그 하루 안에 당신이 진짜 원하는\n삶의 모양이 담겨 있어요.','이유 없이 끌린다는 것,\n그게 관심사의 시작이에요.','그 뿌듯함 속에 당신이 소중히 여기는\n가치가 살아있어요.','그때 그 몰입감,\n사실 지금도 당신 안에 있어요.','그 이야기를 꺼내줘서 고마워요.\n충분히 잘 해왔어요.','그 방향이,\n당신의 나침반이에요.'],
+    cloudy: ['무거운 날에도 따뜻한 게 있었네요.\n그게 당신이에요.','꺼내놓으니 조금 가벼워지지 않아요?\n다 들었어요.','그 말이 필요했던 거,\n이미 알고 있었던 거예요.','흐린 날에도 빛나는 게 있어요.\n그게 바로 그거예요.','그 하루를 상상하는 것만으로도\n마음이 조금 따뜻해지지 않아요?','흐린 날에 더 잘 보이는 것들이 있어요.\n그게 지금 그거예요.','흐려도 뿌듯함은 남아요.\n그게 진짜예요.','그때의 당신,\n지금도 여기 있어요.','무거운 걸 꺼내줘서 고마워요.\n잘 받았어요.','흐려도 방향은 있어요.\n그게 지금 말한 거예요.'],
+    rainy: ['비 오는 날에 꺼낸 따뜻한 기억.\n더 선명하게 느껴지지 않아요?','비 오는 날엔 솔직해지기 쉬워요.\n오늘 잘 꺼내줬어요.','그 말이 필요했던 거,\n비가 알려줬나봐요.','비 오는 날엔 좋은 것들이 더 빛나요.\n그게 바로 그거예요.','빗소리 들으며 그 하루를 보내고 싶어요.\n함께요.','빗속에서도 끌리는 게 있다면,\n그건 진짜예요.','비 오는 날의 뿌듯함,\n더 깊이 새겨져요.','그때의 몰입,\n비 오는 날 더 생생하게 느껴지네요.','비 오는 날에 이런 이야기를 꺼내줘서\n더 고마워요.','빗속에서도 방향이 보이면,\n그게 진짜 나침반이에요.'],
+    foggy: ['안개 속에서도 따뜻한 기억이 있었네요.\n그게 빛이에요.','안개 낀 날에 고민을 꺼내는 건\n용기 있는 일이에요.','모르겠어도 괜찮아요.\n원하는 게 있다는 것 자체가 중요해요.','안개 속에서도 빛나는 게 있어요.\n그게 바로 그거예요.','희미해도 괜찮아요.\n그 하루가 당신 안에 있어요.','안개 속에서 끌린다면,\n그건 더 진짜예요.','안개 낀 날의 뿌듯함,\n더 소중해요.','그때의 몰입이\n지금 이 안개를 걷어줄 수 있어요.','안개 속에서 이런 이야기를 꺼내줘서\n정말 고마워요.','안개는 걷혀요.\n그 방향이 그걸 도와줄 거예요.']
+  };
+
+  function applyWeatherTheme(w) {
+    const t = weatherThemes[w]; if (!t) return;
+    document.getElementById('weatherOverlay').style.background = t.overlay;
+    ['fog1','fog2','fog3','fog4'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('opacity', t.fog); });
+    const rain = document.getElementById('rainContainer');
+    if (t.rain) {
+      rain.innerHTML = '';
+      for (let i = 0; i < 60; i++) {
+        const d = document.createElement('div'); d.className = 'raindrop';
+        d.style.left = Math.random() * 100 + '%';
+        d.style.height = (Math.random() * 20 + 15) + 'px';
+        d.style.animationDuration = (Math.random() * 0.8 + 0.6) + 's';
+        d.style.animationDelay = (Math.random() * 2) + 's';
+        rain.appendChild(d);
+      }
+      rain.style.opacity = '1';
+    } else { rain.style.opacity = '0'; }
   }
 
+  function updateProgress(s) { document.getElementById('progressBar').style.width = Math.min((s / 28) * 100, 100) + '%'; }
+
   function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => {
-      s.classList.remove('active');
-    });
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(id);
-    if (el) {
-      el.classList.remove('active');
-      void el.offsetWidth;
-      el.classList.add('active');
-      currentScreen = id;
-    }
+    if (el) { void el.offsetWidth; el.classList.add('active'); }
     window.scrollTo(0, 0);
   }
 
-  function next(n) {
-    updateProgress(n);
-    showScreen('screen-' + n);
-  }
+  function next(n) { updateProgress(n); showScreen('screen-' + n); }
+  function selectPurpose(p) { purpose = p; next(2); }
 
   function selectWeather(w) {
     weather = w;
-    const msg = weatherMessages[w];
-    document.getElementById('weatherMsg').innerText = msg;
-    updateProgress(3);
-    showScreen('screen-3');
+    applyWeatherTheme(w);
+    document.getElementById('weatherMsg').innerText = weatherMessages[w];
+    updateProgress(3); showScreen('screen-3');
   }
 
   function saveName() {
     const val = document.getElementById('nameInput').value.trim();
-    if (!val) {
-      document.getElementById('nameInput').focus();
-      return;
-    }
+    if (!val) { document.getElementById('nameInput').focus(); return; }
     userName = val;
     document.getElementById('endingName').innerText = userName;
     document.getElementById('endingName2').innerText = userName;
-    updateProgress(5);
-    showScreen('screen-5');
+    updateProgress(5); showScreen('screen-5');
   }
 
   function saveAns(n) {
     const el = document.getElementById('ans' + n);
     if (el) answers[n] = el.value;
-    updateProgress(n * 2 + 4);
-    showScreen('screen-e' + n);
+    const msgs = empathyByWeather[weather] || empathyByWeather['foggy'];
+    const empEl = document.getElementById('empathy-' + n);
+    if (empEl) empEl.innerText = msgs[n - 1];
+    updateProgress(n * 2 + 4); showScreen('screen-e' + n);
   }
 
   function restart() {
-    userName = '';
-    weather = '';
-    answers = {};
-    step = 0;
+    userName = ''; weather = ''; purpose = ''; answers = {};
     document.querySelectorAll('textarea').forEach(t => t.value = '');
     document.getElementById('nameInput').value = '';
-    updateProgress(0);
-    showScreen('screen-0');
+    document.getElementById('weatherOverlay').style.background = '';
+    document.getElementById('rainContainer').style.opacity = '0';
+    ['fog1','fog2','fog3','fog4'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('opacity', '0.22'); });
+    updateProgress(0); showScreen('screen-0');
   }
 
-  // 엔터키로 계속
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
       const activeBtn = document.querySelector('.screen.active .btn');
-      if (activeBtn && document.activeElement.tagName !== 'TEXTAREA') {
-        activeBtn.click();
-      }
+      if (activeBtn && document.activeElement.tagName !== 'TEXTAREA') activeBtn.click();
     }
   });
 
   async function generateEssay() {
     showScreen('screen-loading');
-
-    const weatherKo = { sunny: '맑음', cloudy: '흐림', rainy: '비', foggy: '안개' };
-    const questions = [
-      '요즘 마음을 가장 따뜻하게 했던 순간',
-      '지금 가장 마음에 걸리는 고민',
-      '요즘 필요한 위로나 응원',
-      '친구들이 자주 칭찬하는 모습',
-      '돈도 시간도 없다면 보내고 싶은 하루',
-      '자기도 모르게 계속 찾아보게 되는 주제',
-      '지난 한 해 가장 뿌듯했던 순간',
-      '어린 시절 시간 가는 줄 모르고 빠져들었던 것',
-      '스스로를 가장 다정하게 다독였던 순간',
-      '한 발짝 더 나아간다면 가고 싶은 방향'
-    ];
-
-    let answerText = '';
-    for (let i = 1; i <= 10; i++) {
-      if (answers[i] && answers[i].trim()) {
-        answerText += `${questions[i-1]}: ${answers[i]}\n`;
-      }
-    }
-
-    const prompt = `당신은 사람의 마음을 깊이 이해하고 따뜻한 에세이를 써주는 분입니다.
-
-아래는 "${userName}"님이 "내 마음의 날씨" 앱에서 답변한 내용입니다.
-오늘 선택한 날씨: ${weatherKo[weather] || ''}
-
-${answerText}
-
-위 답변을 바탕으로 이 분만을 위한 따뜻한 에세이를 써주세요.
-
-반드시 지켜야 할 원칙:
-1. 이 분이 스스로 깎아내리거나 별것 아니라고 한 것의 진짜 가치를 재조명해주세요
-2. 답변에서 구체적으로 언급한 내용을 직접 언급해주세요. 일반적인 말은 피해요
-3. 판단하거나 조언하지 말고, 그냥 따뜻하게 받아줘요
-4. 마지막은 앞을 향하는 문장으로 끝내요
-5. 존댓말로, 짧은 문장들로, 시처럼 행갈이를 충분히 해서 써주세요
-6. 400자 내외로 써주세요
-7. "${userName}에게" 로 시작하지 말고 바로 본문으로 시작해요
-
-에세이만 써주세요. 다른 설명은 필요 없어요.`;
-
     try {
       const response = await fetch('/.netlify/functions/essay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: userName, weather, answers })
+        body: JSON.stringify({ name: userName, weather, purpose, answers })
       });
-
       const data = await response.json();
-      const essay = data.essay;
-
       document.getElementById('essayTo').innerText = `✦  ${userName}님에게  ✦`;
-      document.getElementById('essayBody').innerText = essay;
+      document.getElementById('essayBody').innerText = data.essay;
       document.getElementById('endingName2').innerText = userName;
       showScreen('screen-essay');
-
     } catch (err) {
       document.getElementById('essayTo').innerText = `✦  ${userName}님에게  ✦`;
-      document.getElementById('essayBody').innerText =
-        `오늘 이야기를 꺼내줘서 고마워요.\n\n당신이 나눠준 이야기들,\n사실 오래전부터 당신 안에 있던 것들이에요.\n몰랐던 게 아니에요.\n말할 기회가 없었던 거예요.\n\n오늘, 드디어 말했어요.\n그것만으로도 충분해요.\n\n문을 열고 나가면\n어제와 같은 하늘이지만\n당신은 조금 달라져 있을 거예요. 🌱`;
+      document.getElementById('essayBody').innerText = `오늘 이야기를 꺼내줘서 고마워요.\n\n당신이 나눠준 이야기들,\n사실 오래전부터 당신 안에 있던 것들이에요.\n몰랐던 게 아니에요.\n말할 기회가 없었던 거예요.\n\n오늘, 드디어 말했어요.\n그것만으로도 충분해요.\n\n문을 열고 나가면\n어제와 같은 하늘이지만\n당신은 조금 달라져 있을 거예요. 🌱`;
       document.getElementById('endingName2').innerText = userName;
       showScreen('screen-essay');
     }
