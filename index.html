@@ -128,6 +128,7 @@
   .essay-wrap { width: 100%; max-width: 560px; max-height: 65vh; overflow-y: auto; padding: 0 4px; scrollbar-width: thin; scrollbar-color: rgba(78,205,196,0.3) transparent; }
   .essay-to { font-size: 14px; letter-spacing: 4px; color: var(--teal); opacity: 0.8; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; margin-bottom: 8px; }
   .essay-body { font-size: clamp(15px, 3vw, 18px); line-height: 2.1; color: var(--text); text-align: left; white-space: pre-wrap; word-break: keep-all; }
+  .essay-body em { color: var(--teal); font-style: italic; }
   /* 배경 사진 */
   .bg-photo {
     position: fixed; inset: 0; z-index: 0;
@@ -719,7 +720,8 @@
       });
       const data = await response.json();
       document.getElementById('essayTo').innerText = `✦  ${userName}님에게  ✦`;
-      document.getElementById('essayBody').innerText = data.essay;
+      const formatted = data.essay.replace(/\*(".*?")\*/g, '<em>$1</em>');
+      document.getElementById('essayBody').innerHTML = formatted;
       document.getElementById('endingName2').innerText = userName;
       document.getElementById('progressBar').style.width = '100%';
       fadeToTrack('essay');
