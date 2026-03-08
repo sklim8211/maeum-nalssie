@@ -401,10 +401,12 @@
   };
 
   const weatherPhotos = {
-    sunny:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947829/nathan-jennings-VsPsf4F5Pi0-unsplash_b8p5ti.jpg',
-    cloudy: 'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/nilantha-sanjeewa-OJdDgFA0qa0-unsplash_acy2io.jpg',
+    sunny:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947827/simona-d-auria-dDKjrFzijbM-unsplash_zvf0yb.jpg',
+    cloudy: 'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772949430/jamie-pilgrim-9omi4pgdTB0-unsplash_hfeibm.jpg',
     rainy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947824/oakley-smith-z0p1BHuEHK4-unsplash_1_vr0ofb.jpg',
-    foggy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947827/zuzana-ruttkay-ctKnjMn3GnU-unsplash_bi43cj.jpg'
+    foggy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947827/zuzana-ruttkay-ctKnjMn3GnU-unsplash_bi43cj.jpg',
+    intro:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947829/nathan-jennings-VsPsf4F5Pi0-unsplash_b8p5ti.jpg',
+    essay:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/nilantha-sanjeewa-OJdDgFA0qa0-unsplash_acy2io.jpg'
   };
 
   function applyWeatherTheme(w) {
@@ -515,6 +517,13 @@
     const el = document.getElementById(id);
     if (el) { void el.offsetWidth; el.classList.add('active'); }
     window.scrollTo(0, 0);
+    // 특정 화면에서 배경 전환
+    if (id === 'screen-0' || id === 'screen-1') {
+      document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
+    }
+    if (id === 'screen-essay') {
+      document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.essay}')`;
+    }
   }
 
   // 날씨별 목적 선택 화면 문구
