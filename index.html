@@ -499,6 +499,8 @@
       btn.innerText = '🔈';
     }
   }
+
+  function updateProgress(current, total) {
     const pct = Math.min((current / (total + 4)) * 100, 95);
     document.getElementById('progressBar').style.width = pct + '%';
   }
