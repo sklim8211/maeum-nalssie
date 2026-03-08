@@ -124,28 +124,65 @@
     filter: brightness(0.45);
   }
 
-  /* 등대 불빛 효과 */
+  /* 등대 불빛 효과 — 인트로/날씨 선택 화면 */
   .lighthouse-beam {
     position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform-origin: bottom center;
-    width: 0;
-    height: 0;
-    border-left: 60px solid transparent;
-    border-right: 60px solid transparent;
-    border-bottom: 100vh solid rgba(255, 240, 180, 0.06);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 1;
     pointer-events: none;
-    animation: beam-sweep 6s ease-in-out infinite;
     display: none;
   }
-  @keyframes beam-sweep {
-    0%   { transform: translateX(-50%) rotate(-30deg); opacity: 0.3; }
-    25%  { transform: translateX(-50%) rotate(0deg);   opacity: 0.6; }
-    50%  { transform: translateX(-50%) rotate(30deg);  opacity: 0.3; }
-    75%  { transform: translateX(-50%) rotate(0deg);   opacity: 0.5; }
-    100% { transform: translateX(-50%) rotate(-30deg); opacity: 0.3; }
+
+  /* 등대 반짝임 — 작은 빛점 */
+  .lighthouse-glow {
+    position: fixed;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,240,150,1) 0%, rgba(255,220,80,0.6) 40%, transparent 70%);
+    z-index: 2;
+    pointer-events: none;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: glow-twinkle 2.5s ease-in-out infinite;
+    display: none;
+  }
+
+  /* 빛줄기 */
+  .lighthouse-ray {
+    position: fixed;
+    top: 38%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 65vh solid rgba(255, 240, 150, 0.04);
+    transform-origin: top center;
+    z-index: 1;
+    pointer-events: none;
+    animation: ray-sweep 5s ease-in-out infinite;
+    display: none;
+  }
+
+  @keyframes glow-twinkle {
+    0%   { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); box-shadow: 0 0 8px 4px rgba(255,230,100,0.3); }
+    25%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 20px 10px rgba(255,230,100,0.5); }
+    50%  { opacity: 0.6; transform: translate(-50%, -50%) scale(1.0); box-shadow: 0 0 10px 5px rgba(255,230,100,0.3); }
+    75%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 25px 12px rgba(255,230,100,0.6); }
+    100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); box-shadow: 0 0 8px 4px rgba(255,230,100,0.3); }
+  }
+
+  @keyframes ray-sweep {
+    0%   { transform: translateX(-50%) rotate(-25deg); opacity: 0.4; }
+    25%  { transform: translateX(-50%) rotate(0deg);   opacity: 0.7; }
+    50%  { transform: translateX(-50%) rotate(25deg);  opacity: 0.4; }
+    75%  { transform: translateX(-50%) rotate(0deg);   opacity: 0.6; }
+    100% { transform: translateX(-50%) rotate(-25deg); opacity: 0.4; }
   }
   .mute-btn {
     position: fixed;
@@ -177,6 +214,8 @@
 
 <div class="bg-photo" id="bgPhoto"></div>
 <div class="lighthouse-beam" id="lighthouseBeam"></div>
+<div class="lighthouse-glow" id="lighthouseGlow"></div>
+<div class="lighthouse-ray" id="lighthouseRay"></div>
 
 <div class="weather-overlay" id="weatherOverlay"></div>
 <div class="rain-container" id="rainContainer"></div>
@@ -431,13 +470,6 @@
     } else {
       rain.style.opacity = '0';
     }
-    // 등대 불빛 — 등대 사진(foggy)일 때 표시
-    const beam = document.getElementById('lighthouseBeam');
-    if (w === 'foggy') {
-      beam.style.display = 'block';
-    } else {
-      beam.style.display = 'none';
-    }
   }
 
   // BGM 설정
@@ -512,14 +544,23 @@
     document.getElementById('progressBar').style.width = pct + '%';
   }
 
+  function showLighthouse(show) {
+    const display = show ? 'block' : 'none';
+    document.getElementById('lighthouseGlow').style.display = display;
+    document.getElementById('lighthouseRay').style.display = display;
+  }
+
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(id);
     if (el) { void el.offsetWidth; el.classList.add('active'); }
     window.scrollTo(0, 0);
-    // 특정 화면에서 배경 전환
+    // 인트로/날씨 선택 화면 — 등대 배경 + 불빛
     if (id === 'screen-0' || id === 'screen-1') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
+      showLighthouse(true);
+    } else {
+      showLighthouse(false);
     }
     if (id === 'screen-essay') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.essay}')`;
