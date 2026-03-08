@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -108,7 +107,16 @@ ${answerText}
 
 ---
 
-에세이만 써주세요. 제목도, 설명도 필요 없어요.`;
+에세이만 써주세요. 제목도, 설명도 필요 없어요.
+
+그리고 에세이가 끝난 뒤, 한 줄 띄고 — 이 사람의 상황과 감정에 가장 잘 어울리는 명언 하나를 골라서 붙여줘요.
+
+동서양 철학자, 작가, 시인, 심리학자 중에서 골라요.
+너무 유명해서 식상한 것보다 — 이 사람 상황에 진짜 딱 맞는 것으로요.
+형식은 이렇게요:
+
+*"명언 내용"*
+— 이름`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
