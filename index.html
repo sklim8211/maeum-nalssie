@@ -91,7 +91,21 @@
   }
   .btn:hover { background: var(--teal); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(78,205,196,0.3); }
   .btn-row { display: flex; gap: 12px; align-items: center; justify-content: center; }
-  .btn-back {
+  .btn-share {
+    background: transparent;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    letter-spacing: 0.03em;
+  }
+  .btn-share:hover {
+    background: rgba(78,205,196,0.1);
+  }
     background: transparent; border: 1px solid rgba(78,205,196,0.35); border-radius: 3px;
     padding: 13px 24px; color: rgba(232,244,240,0.6); font-family: 'Nanum Myeongjo', serif;
     font-size: 15px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 1px;
@@ -329,7 +343,10 @@
       <div class="essay-body" id="essayBody"></div>
       <div class="divider"></div>
     </div>
-    <button class="btn" onclick="showScreen('screen-16')" style="margin-top:24px">계속</button>
+    <div class="btn-row" style="margin-top:24px">
+      <button class="btn-share" onclick="shareEssay()" id="shareBtn">🔗 공유하기</button>
+      <button class="btn" onclick="showScreen('screen-16')">계속</button>
+    </div>
   </div>
 
   <!-- 화면 16: 엔딩 -->
@@ -648,8 +665,30 @@
     }
   }
 
+  function shareEssay() {
+    const essayText = document.getElementById('essayBody').innerText;
+    // 마지막 두 문장 추출
+    const sentences = essayText.split('\n').filter(s => s.trim().length > 0);
+    const lastTwo = sentences.slice(-2).join('\n');
+    const shareText = `${lastTwo}\n\n— 내 마음의 날씨\n${window.location.origin}`;
+
+    if (navigator.share) {
+      // 모바일 웹 공유 API
+      navigator.share({
+        title: '내 마음의 날씨',
+        text: shareText
+      }).catch(() => {});
+    } else {
+      // PC — 클립보드 복사
+      navigator.clipboard.writeText(shareText).then(() => {
+        const btn = document.getElementById('shareBtn');
+        btn.innerText = '✅ 복사됐어요!';
+        setTimeout(() => { btn.innerText = '🔗 공유하기'; }, 2000);
+      }).catch(() => {});
+    }
+  }
+
   function restart() {
-    userName = ''; weather = ''; purpose = ''; answers = {};
     currentQIndex = 0; questions = [];
     document.querySelectorAll('textarea').forEach(t => t.value = '');
     document.getElementById('nameInput').value = '';
