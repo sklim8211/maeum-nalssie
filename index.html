@@ -632,7 +632,7 @@
     const answersForApi = {};
     Object.keys(answers).forEach(k => { answersForApi[parseInt(k) + 1] = answers[k]; });
     try {
-      const response = await fetch('/.netlify/functions/essay', {
+      const response = await fetch('/api/essay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: userName, weather, purpose, answers: answersForApi })
