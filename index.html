@@ -114,7 +114,39 @@
   .essay-wrap { width: 100%; max-width: 560px; max-height: 65vh; overflow-y: auto; padding: 0 4px; scrollbar-width: thin; scrollbar-color: rgba(78,205,196,0.3) transparent; }
   .essay-to { font-size: 14px; letter-spacing: 4px; color: var(--teal); opacity: 0.8; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; margin-bottom: 8px; }
   .essay-body { font-size: clamp(15px, 3vw, 18px); line-height: 2.1; color: var(--text); text-align: left; white-space: pre-wrap; word-break: keep-all; }
-  /* 음소거 버튼 */
+  /* 배경 사진 */
+  .bg-photo {
+    position: fixed; inset: 0; z-index: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1.5s ease, opacity 1.5s ease;
+    filter: brightness(0.45);
+  }
+
+  /* 등대 불빛 효과 */
+  .lighthouse-beam {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform-origin: bottom center;
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 100vh solid rgba(255, 240, 180, 0.06);
+    z-index: 1;
+    pointer-events: none;
+    animation: beam-sweep 6s ease-in-out infinite;
+    display: none;
+  }
+  @keyframes beam-sweep {
+    0%   { transform: translateX(-50%) rotate(-30deg); opacity: 0.3; }
+    25%  { transform: translateX(-50%) rotate(0deg);   opacity: 0.6; }
+    50%  { transform: translateX(-50%) rotate(30deg);  opacity: 0.3; }
+    75%  { transform: translateX(-50%) rotate(0deg);   opacity: 0.5; }
+    100% { transform: translateX(-50%) rotate(-30deg); opacity: 0.3; }
+  }
   .mute-btn {
     position: fixed;
     bottom: 24px;
@@ -143,56 +175,8 @@
 </head>
 <body>
 
-<div class="bg">
-  <svg viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#2a3840"/>
-        <stop offset="100%" stop-color="#4a5e68"/>
-      </linearGradient>
-      <linearGradient id="fogGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#7a9aaa" stop-opacity="0.5"/>
-        <stop offset="100%" stop-color="#7a9aaa" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <rect width="800" height="900" fill="url(#skyGrad)"/>
-    <ellipse cx="400" cy="500" rx="600" ry="120" fill="#8aacbc" opacity="0.25" id="fog1"/>
-    <ellipse cx="200" cy="560" rx="400" ry="80" fill="#9abccc" opacity="0.20" id="fog2"/>
-    <ellipse cx="600" cy="540" rx="350" ry="70" fill="#8aacbc" opacity="0.18" id="fog3"/>
-    <ellipse cx="400" cy="620" rx="500" ry="90" fill="#7a9aaa" opacity="0.22" id="fog4"/>
-    <g opacity="0.85">
-      <rect x="18" y="200" width="14" height="700" fill="#1a2830" rx="4"/>
-      <ellipse cx="25" cy="180" rx="55" ry="80" fill="#1e3038"/>
-      <ellipse cx="10" cy="220" rx="45" ry="65" fill="#223540"/>
-      <ellipse cx="45" cy="200" rx="48" ry="70" fill="#1a2e38"/>
-      <ellipse cx="25" cy="140" rx="42" ry="60" fill="#1e3038"/>
-      <rect x="72" y="280" width="11" height="620" fill="#182430" rx="3"/>
-      <ellipse cx="78" cy="260" rx="44" ry="65" fill="#1e3040"/>
-      <ellipse cx="62" cy="295" rx="36" ry="52" fill="#223545"/>
-      <ellipse cx="95" cy="278" rx="38" ry="56" fill="#1a2e3c"/>
-      <ellipse cx="78" cy="220" rx="35" ry="50" fill="#1e3040"/>
-      <rect x="130" y="350" width="9" height="550" fill="#1a2830" rx="3" opacity="0.6"/>
-      <ellipse cx="135" cy="330" rx="38" ry="55" fill="#1e3038" opacity="0.6"/>
-    </g>
-    <g opacity="0.85">
-      <rect x="768" y="200" width="14" height="700" fill="#1a2830" rx="4"/>
-      <ellipse cx="775" cy="180" rx="55" ry="80" fill="#1e3038"/>
-      <ellipse cx="790" cy="220" rx="45" ry="65" fill="#223540"/>
-      <ellipse cx="755" cy="200" rx="48" ry="70" fill="#1a2e38"/>
-      <ellipse cx="775" cy="140" rx="42" ry="60" fill="#1e3038"/>
-      <rect x="717" y="280" width="11" height="620" fill="#182430" rx="3"/>
-      <ellipse cx="722" cy="260" rx="44" ry="65" fill="#1e3040"/>
-      <ellipse cx="738" cy="295" rx="36" ry="52" fill="#223545"/>
-      <ellipse cx="705" cy="278" rx="38" ry="56" fill="#1a2e3c"/>
-      <ellipse cx="722" cy="220" rx="35" ry="50" fill="#1e3040"/>
-      <rect x="661" y="350" width="9" height="550" fill="#1a2830" rx="3" opacity="0.6"/>
-      <ellipse cx="665" cy="330" rx="38" ry="55" fill="#1e3038" opacity="0.6"/>
-    </g>
-    <rect x="0" y="750" width="800" height="150" fill="#5a7888" opacity="0.35"/>
-    <ellipse cx="400" cy="780" rx="500" ry="60" fill="#6a8898" opacity="0.30"/>
-    <rect x="0" y="0" width="800" height="120" fill="url(#fogGrad)"/>
-  </svg>
-</div>
+<div class="bg-photo" id="bgPhoto"></div>
+<div class="lighthouse-beam" id="lighthouseBeam"></div>
 
 <div class="weather-overlay" id="weatherOverlay"></div>
 <div class="rain-container" id="rainContainer"></div>
@@ -416,12 +400,22 @@
     foggy: ['안개 속에서도 따뜻한 기억이 있었네요.\n그게 빛이에요.','안개 낀 날에 고민을 꺼내는 건\n용기 있는 일이에요.','모르겠어도 괜찮아요.\n원하는 게 있다는 것 자체가 중요해요.','안개 속에서도 빛나는 게 있어요.\n그게 바로 그거예요.','희미해도 괜찮아요.\n그 하루가 당신 안에 있어요.','안개 속에서 끌린다면,\n그건 더 진짜예요.','안개 낀 날의 뿌듯함,\n더 소중해요.','그때의 몰입이\n지금 이 안개를 걷어줄 수 있어요.','안개 속에서 이런 이야기를 꺼내줘서\n정말 고마워요.','안개는 걷혀요.\n그 방향이 그걸 도와줄 거예요.']
   };
 
+  const weatherPhotos = {
+    sunny:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947827/simona-d-auria-dDKjrFzijbM-unsplash_zvf0yb.jpg',
+    cloudy: 'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/nilantha-sanjeewa-OJdDgFA0qa0-unsplash_acy2io.jpg',
+    rainy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947824/oakley-smith-z0p1BHuEHK4-unsplash_1_vr0ofb.jpg',
+    foggy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947827/zuzana-ruttkay-ctKnjMn3GnU-unsplash_bi43cj.jpg'
+  };
+
   function applyWeatherTheme(w) {
-    const t = weatherThemes[w]; if (!t) return;
-    document.getElementById('weatherOverlay').style.background = t.overlay;
-    ['fog1','fog2','fog3','fog4'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('opacity', t.fog); });
+    // 배경 사진 전환
+    const photo = weatherPhotos[w];
+    if (photo) {
+      document.getElementById('bgPhoto').style.backgroundImage = `url('${photo}')`;
+    }
+    // 비 효과
     const rain = document.getElementById('rainContainer');
-    if (t.rain) {
+    if (w === 'rainy') {
       rain.innerHTML = '';
       for (let i = 0; i < 60; i++) {
         const d = document.createElement('div'); d.className = 'raindrop';
@@ -432,7 +426,16 @@
         rain.appendChild(d);
       }
       rain.style.opacity = '1';
-    } else { rain.style.opacity = '0'; }
+    } else {
+      rain.style.opacity = '0';
+    }
+    // 등대 불빛 — 등대 사진(foggy)일 때 표시
+    const beam = document.getElementById('lighthouseBeam');
+    if (w === 'foggy') {
+      beam.style.display = 'block';
+    } else {
+      beam.style.display = 'none';
+    }
   }
 
   // BGM 설정
