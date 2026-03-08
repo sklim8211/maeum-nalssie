@@ -216,20 +216,8 @@
     <button class="btn" onclick="showScreen('screen-1')">제 마음을 들킨 것 같아요</button>
   </div>
 
-  <!-- 화면 1: 목적 선택 -->
+  <!-- 화면 1: 날씨 선택 -->
   <div class="screen" id="screen-1">
-    <div class="main-text" style="margin-bottom:16px">오늘 여기 온 이유가 뭔가요?</div>
-    <div class="sub-text">어떤 이유든 괜찮아요</div>
-    <div class="purpose-grid">
-      <button class="purpose-btn" onclick="selectPurpose('discover')"><span>🌱</span><div>나 자신을 좀 더 알고 싶어요</div></button>
-      <button class="purpose-btn" onclick="selectPurpose('worry')"><span>💭</span><div>고민이 있어서 털어놓고 싶어요</div></button>
-      <button class="purpose-btn" onclick="selectPurpose('diary')"><span>📖</span><div>오늘 하루를 정리하고 싶어요</div></button>
-      <button class="purpose-btn" onclick="selectPurpose('just')"><span>🌫</span><div>그냥 왔어요. 이유는 없어요</div></button>
-    </div>
-  </div>
-
-  <!-- 화면 2: 날씨 선택 -->
-  <div class="screen" id="screen-2">
     <div class="app-title">내 마음의 날씨</div>
     <div class="main-text" style="margin-bottom:32px">오늘 내 마음의 날씨는<br>어떤가요?</div>
     <div class="weather-grid">
@@ -240,10 +228,22 @@
     </div>
   </div>
 
-  <!-- 화면 3: 날씨 공감 -->
-  <div class="screen" id="screen-3">
+  <!-- 화면 2: 날씨 공감 -->
+  <div class="screen" id="screen-2">
     <div class="empathy-text" id="weatherMsg"></div>
-    <button class="btn" onclick="showScreen('screen-4')">계속</button>
+    <button class="btn" onclick="showScreen('screen-3')">계속</button>
+  </div>
+
+  <!-- 화면 3: 목적 선택 — 날씨에 따라 문구 바뀜 -->
+  <div class="screen" id="screen-3">
+    <div class="main-text" style="margin-bottom:8px" id="purposeTitle">오늘 여기 온 당신에게<br>어떤 시간이 필요한가요?</div>
+    <div class="sub-text" style="margin-bottom:28px" id="purposeSubtitle">어떤 이유든 괜찮아요</div>
+    <div class="purpose-grid">
+      <button class="purpose-btn" onclick="selectPurpose('discover')"><span>🌱</span><div>나를 좀 더 알고 싶어요</div></button>
+      <button class="purpose-btn" onclick="selectPurpose('worry')"><span>💭</span><div>고민을 털어놓고 싶어요</div></button>
+      <button class="purpose-btn" onclick="selectPurpose('diary')"><span>📖</span><div>오늘 하루를 정리하고 싶어요</div></button>
+      <button class="purpose-btn" onclick="selectPurpose('just')"><span>🌫</span><div>그냥 왔어요. 이유는 없어요</div></button>
+    </div>
   </div>
 
   <!-- 화면 4: 이름 -->
@@ -512,11 +512,19 @@
     window.scrollTo(0, 0);
   }
 
+  // 날씨별 목적 선택 화면 문구
+  const purposeByWeather = {
+    sunny: { title: '맑은 날, 여기까지 왔네요.\n오늘 어떤 시간이 필요해요?', sub: '어떤 이유든 괜찮아요' },
+    cloudy: { title: '흐린 날에 여기 왔네요.\n오늘 어떤 시간이 필요해요?', sub: '무거워도 괜찮아요' },
+    rainy: { title: '비 오는 날에 여기 왔네요.\n오늘 어떤 시간이 필요해요?', sub: '솔직해도 괜찮아요' },
+    foggy: { title: '안개 낀 날에 여기 왔네요.\n오늘 어떤 시간이 필요해요?', sub: '몰라도 괜찮아요' }
+  };
+
   function selectPurpose(p) {
     purpose = p;
     // 목적별 BGM으로 전환 (있는 것만)
     if (bgmTracks[p]) fadeToTrack(p);
-    showScreen('screen-2');
+    showScreen('screen-4');
   }
 
   function selectWeather(w) {
@@ -525,7 +533,13 @@
     document.getElementById('weatherMsg').innerText = weatherMessages[w];
     // 날씨별 BGM 시작 (있는 것만)
     if (bgmTracks[w]) playBGM(w);
-    showScreen('screen-3');
+    // 목적 화면 문구 날씨에 맞게 세팅
+    const p = purposeByWeather[w];
+    if (p) {
+      document.getElementById('purposeTitle').innerText = p.title;
+      document.getElementById('purposeSubtitle').innerText = p.sub;
+    }
+    showScreen('screen-2');
   }
 
   function saveName() {
