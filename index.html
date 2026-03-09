@@ -44,7 +44,7 @@
   }
   .screen {
     display: none; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; max-width: 600px; width: 100%; animation: fadeUp 0.7s ease forwards;
+    text-align: center; max-width: 600px; width: 100%; animation: fadeUp 1.2s ease forwards;
   }
   .screen.active { display: flex; }
   @keyframes fadeUp {
@@ -88,7 +88,7 @@
     opacity: 0;
     transform: translateY(10px);
     filter: blur(8px);
-    transition: opacity 1.6s ease, transform 1.6s ease, filter 1.6s ease;
+    transition: opacity 2.2s ease, transform 2.2s ease, filter 2.2s ease;
     text-shadow: 0 1px 10px rgba(0,0,0,0.5);
   }
   .seq-line.visible {
@@ -100,7 +100,7 @@
     opacity: 0;
     transform: translateY(-8px);
     filter: blur(6px);
-    transition: opacity 0.9s ease, transform 0.9s ease, filter 0.9s ease;
+    transition: opacity 1.3s ease, transform 1.3s ease, filter 1.3s ease;
   }
   .seq-sub {
     font-size: clamp(16px, 4vw, 20px);
@@ -214,7 +214,7 @@
   .weather-title span {
     display: inline-block;
     opacity: 0;
-    animation: wave-in 0.5s ease forwards;
+    animation: wave-in 1.0s ease forwards;
   }
   @keyframes wave-in {
     from { opacity: 0; transform: translateY(12px); }
@@ -231,7 +231,7 @@
     word-break: keep-all;
     filter: blur(6px);
     opacity: 0;
-    transition: filter 1.4s ease, opacity 1.4s ease;
+    transition: filter 2.2s ease, opacity 2.2s ease;
   }
   .empathy-text.revealed {
     filter: blur(0px);
@@ -250,7 +250,7 @@
   .purpose-title span {
     display: inline-block;
     opacity: 0;
-    animation: drop-in 0.4s cubic-bezier(0.23, 1.5, 0.32, 1) forwards;
+    animation: drop-in 0.8s cubic-bezier(0.23, 1.5, 0.32, 1) forwards;
   }
   @keyframes drop-in {
     from { opacity: 0; transform: translateY(-20px); }
@@ -271,7 +271,7 @@
 
   /* 공감 멘트 — 아래서 위로 떠오르는 효과 */
   .empathy-rise {
-    animation: rise-up 1.0s ease forwards;
+    animation: rise-up 1.8s ease forwards;
     opacity: 0;
   }
   @keyframes rise-up {
@@ -284,7 +284,7 @@
     display: block;
     opacity: 0;
     transform: translateY(8px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition: opacity 1.2s ease, transform 1.2s ease;
   }
   .essay-line.visible {
     opacity: 1;
@@ -327,7 +327,6 @@
   .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: rgba(78,205,196,0.15); z-index: 10; }
   .progress-bar { height: 100%; background: var(--teal); transition: width 0.5s ease; }
   .q-num { font-size: 12px; color: var(--teal); opacity: 0.5; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; }
-  .empathy-text { font-size: clamp(17px, 3.8vw, 22px); line-height: 1.95; color: var(--text); margin-bottom: 36px; word-break: keep-all; white-space: pre-wrap; }
   .ending-text { font-size: clamp(15px, 3.2vw, 20px); line-height: 2; color: var(--text); margin-bottom: 48px; word-break: keep-all; }
   .ending-name { color: var(--teal); font-weight: 700; }
   .divider { width: 60px; height: 1px; background: linear-gradient(to right, transparent, var(--teal), transparent); margin: 24px auto; }
@@ -836,7 +835,7 @@
     el.innerHTML = chars.map(c => {
       if (c === '\n') return '<br>';
       const span = `<span style="animation-delay:${delay}ms">${c === ' ' ? '&nbsp;' : c}</span>`;
-      delay += 60;
+      delay += 120;
       return span;
     }).join('');
   }
@@ -850,7 +849,7 @@
     el.innerHTML = chars.map(c => {
       if (c === '\n') return '<br>';
       const span = `<span style="animation-delay:${delay}ms">${c === ' ' ? '&nbsp;' : c}</span>`;
-      delay += 55;
+      delay += 110;
       return span;
     }).join('');
   }
@@ -861,13 +860,13 @@
     el.innerText = '';
     el.classList.add('q-text-typing');
     let i = 0;
-    const speed = 38;
+    const speed = 95;
     const timer = setInterval(() => {
       el.innerText += text[i];
       i++;
       if (i >= text.length) {
         clearInterval(timer);
-        setTimeout(() => el.classList.remove('q-text-typing'), 400);
+        setTimeout(() => el.classList.remove('q-text-typing'), 600);
         if (callback) callback();
       }
     }, speed);
@@ -881,7 +880,7 @@
     el.innerHTML = lines.map(l => `<span class="essay-line">${l}</span>`).join('\n');
     const spans = el.querySelectorAll('.essay-line');
     spans.forEach((span, i) => {
-      setTimeout(() => span.classList.add('visible'), i * 180);
+      setTimeout(() => span.classList.add('visible'), i * 300);
     });
   }
 
@@ -913,11 +912,17 @@
       const msg = document.getElementById('weatherMsg');
       if (msg) {
         msg.classList.remove('revealed');
-        setTimeout(() => msg.classList.add('revealed'), 200);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            msg.classList.add('revealed');
+          });
+        });
       }
     } else if (id === 'screen-3') {
       showLighthouse(false);
       setTimeout(() => dropTitle(document.getElementById('purposeTitle')), 300);
+    } else if (id === 'screen-empathy') {
+      showLighthouse(false);
     } else {
       showLighthouse(false);
     }
@@ -992,10 +997,14 @@
     const msg = empSet[currentQIndex] || '잘 들었어요.\n고마워요.';
     const empEl = document.getElementById('empathyText');
     empEl.innerText = msg;
-    empEl.classList.remove('revealed', 'empathy-rise');
+    empEl.classList.remove('revealed');
     showScreen('screen-empathy');
-    // 공감 멘트 rise-up 효과
-    setTimeout(() => empEl.classList.add('empathy-rise'), 100);
+    // rAF 두 번으로 transition 확실히 트리거
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        empEl.classList.add('revealed');
+      });
+    });
   }
 
   function goBackToQuestion() {
@@ -1168,7 +1177,7 @@
       document.getElementById('progressBar').style.width = '100%';
       showScreen('screen-essay');
       // 에세이 한 줄씩 등장
-      setTimeout(() => revealEssayLines(document.getElementById('essayBody')), 400);
+      setTimeout(() => revealEssayLines(document.getElementById('essayBody')), 800);
       fadeToTrack('essay');
       showScreen('screen-essay');
     } catch (err) {
