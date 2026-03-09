@@ -143,34 +143,6 @@
     position: relative;
     width: 100%;
   }
-  .mic-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(78,205,196,0.4);
-    background: rgba(78,205,196,0.08);
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    margin: 12px auto 0;
-  }
-  .mic-btn:hover {
-    background: rgba(78,205,196,0.2);
-    border-color: var(--teal);
-    transform: scale(1.1);
-  }
-  .mic-btn.recording {
-    background: rgba(255,80,80,0.2);
-    border-color: #ff5050;
-    animation: mic-pulse 1s ease-in-out infinite;
-  }
-  @keyframes mic-pulse {
-    0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255,80,80,0.4); }
-    50%       { transform: scale(1.12); box-shadow: 0 0 0 8px rgba(255,80,80,0); }
-  }
   .mic-status {
     font-size: 13px;
     color: var(--teal);
@@ -318,6 +290,7 @@
     opacity: 1;
     transform: translateY(0);
   }
+  .textarea-input {
     width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(78,205,196,0.4);
     padding: 12px 0; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 17px;
     outline: none; resize: none; min-height: 80px; transition: border-color 0.3s; line-height: 1.8;
@@ -462,6 +435,38 @@
     background: rgba(78,205,196,0.2);
     border-color: var(--teal);
   }
+  /* 마이크 버튼 — 음소거 버튼 왼쪽 */
+  .mic-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 76px;
+    z-index: 20;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(78,205,196,0.3);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+  }
+  .mic-btn:hover {
+    background: rgba(78,205,196,0.2);
+    border-color: var(--teal);
+  }
+  .mic-btn.recording {
+    background: rgba(255,80,80,0.15);
+    border-color: #ff5050;
+    animation: mic-pulse 1s ease-in-out infinite;
+  }
+  @keyframes mic-pulse {
+    0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255,80,80,0.4); }
+    50%       { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(255,80,80,0); }
+  }
 
   @media (max-width: 480px) { .app { padding: 30px 16px; } .weather-btn { padding: 14px 18px; font-size: 15px; } .btn-row { flex-direction: column; } }
 </style>
@@ -479,6 +484,7 @@
 <!-- 배경음악 -->
 <audio id="bgm" loop preload="none"></audio>
 <button class="mute-btn" id="muteBtn" onclick="toggleMute()">🔈</button>
+<button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="음성으로 답변하기">🎙️</button>
 
 <div class="progress">
   <div class="progress-bar" id="progressBar" style="width:0%"></div>
@@ -549,7 +555,6 @@
       <div class="textarea-wrap">
         <textarea class="textarea-input" id="qAnswer" placeholder="여기에 답변을 입력하세요..."></textarea>
       </div>
-      <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="음성으로 답변하기">🎙️</button>
       <div class="mic-status" id="micStatus"></div>
       <div class="mic-preview" id="micPreview" style="display:none">
         <div class="mic-preview-text" id="micPreviewText"></div>
@@ -891,17 +896,20 @@
     const el = document.getElementById(id);
     if (el) { void el.offsetWidth; el.classList.add('active'); }
     window.scrollTo(0, 0);
+
+    // 마이크 버튼 — 질문 화면에서만 보이게
+    const micBtn = document.getElementById('micBtn');
+    if (micBtn) micBtn.style.display = (id === 'screen-q') ? 'flex' : 'none';
+
     if (id === 'screen-0') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
       showLighthouse(false);
     } else if (id === 'screen-1') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.weather}')`;
       showLighthouse(true);
-      // 날씨 선택 타이틀 물결 효과
       setTimeout(() => waveTitle(document.getElementById('weatherTitle')), 300);
     } else if (id === 'screen-2') {
       showLighthouse(false);
-      // 날씨 공감 blur → 선명 효과
       const msg = document.getElementById('weatherMsg');
       if (msg) {
         msg.classList.remove('revealed');
@@ -909,7 +917,6 @@
       }
     } else if (id === 'screen-3') {
       showLighthouse(false);
-      // 목적 선택 타이틀 빗방울 효과
       setTimeout(() => dropTitle(document.getElementById('purposeTitle')), 300);
     } else {
       showLighthouse(false);
