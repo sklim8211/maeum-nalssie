@@ -26,7 +26,7 @@
   .weather-overlay {
     position: fixed; inset: 0; z-index: 1;
     transition: background 1.5s ease;
-    background: linear-gradient(to bottom, rgba(58,74,82,0.3) 0%, rgba(58,74,82,0.1) 40%, rgba(58,74,82,0.4) 70%, rgba(58,74,82,0.7) 100%);
+    background: transparent;
   }
   .rain-container { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
   .raindrop {
@@ -137,6 +137,7 @@
     background-repeat: no-repeat;
     transition: background-image 1.5s ease, opacity 1.5s ease;
     filter: brightness(0.45);
+    background-image: url('https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/mark-patterson-759UFvlg78U-unsplash_ezshja.jpg');
   }
 
   /* 등대 불빛 효과 — 인트로/날씨 선택 화면 */
@@ -463,6 +464,7 @@
     rainy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947824/oakley-smith-z0p1BHuEHK4-unsplash_1_vr0ofb.jpg',
     foggy:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947827/simona-d-auria-dDKjrFzijbM-unsplash_zvf0yb.jpg',
     intro:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/mark-patterson-759UFvlg78U-unsplash_ezshja.jpg',
+    weather: 'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947829/nathan-jennings-VsPsf4F5Pi0-unsplash_b8p5ti.jpg',
     essay:  'https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/nilantha-sanjeewa-OJdDgFA0qa0-unsplash_acy2io.jpg'
   };
 
@@ -574,8 +576,11 @@
     if (el) { void el.offsetWidth; el.classList.add('active'); }
     window.scrollTo(0, 0);
     // 인트로/날씨 선택 화면 — 등대 배경 + 불빛
-    if (id === 'screen-0' || id === 'screen-1') {
+    if (id === 'screen-0') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
+      showLighthouse(false);
+    } else if (id === 'screen-1') {
+      document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.weather}')`;
       showLighthouse(true);
     } else {
       showLighthouse(false);
@@ -733,6 +738,11 @@
       showScreen('screen-essay');
     }
   }
+
+  // 페이지 로드 시 첫 화면 배경 설정
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
+  });
 </script>
 </body>
 </html>
