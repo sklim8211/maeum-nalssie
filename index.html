@@ -52,6 +52,73 @@
     to { opacity: 1; transform: translateY(0); }
   }
   .app-title { font-size: 13px; letter-spacing: 6px; color: var(--teal); opacity: 0.7; margin-bottom: 48px; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; }
+
+  /* 인트로 화면 애니메이션 */
+  .intro-title {
+    font-size: clamp(24px, 6vw, 36px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: intro-fade-up 1.2s ease forwards, shimmer 5s linear 1.5s infinite;
+    background: linear-gradient(90deg, #ffffff 0%, #a8d8ea 30%, #e0f4ff 50%, #a8d8ea 70%, #ffffff 100%);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 12px rgba(168,216,234,0.4));
+  }
+  @keyframes shimmer {
+    0%   { background-position: 250% center; }
+    100% { background-position: -250% center; }
+  }
+  .intro-sequence {
+    min-height: 80px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .seq-line {
+    font-size: clamp(16px, 4vw, 20px);
+    color: rgba(255,255,255,0.92);
+    line-height: 1.8;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+    text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+  }
+  .seq-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .seq-line.hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .seq-sub {
+    font-size: clamp(14px, 3.5vw, 17px);
+    color: rgba(255,255,255,0.65);
+  }
+  .intro-btn-wrap {
+    margin-top: 36px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .intro-btn-wrap.visible {
+    opacity: 1;
+  }
+  .btn-comic {
+    font-size: 17px !important;
+    letter-spacing: 0.01em !important;
+  }
+  @keyframes intro-fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   .main-text { font-size: clamp(17px, 3.8vw, 24px); line-height: 1.85; color: var(--text); margin-bottom: 12px; font-weight: 400; word-break: keep-all; overflow-wrap: break-word; }
   .sub-text { font-size: clamp(14px, 3vw, 17px); color: var(--teal); opacity: 0.75; margin-bottom: 32px; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; line-height: 1.8; }
   .weather-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 420px; margin-bottom: 24px; }
@@ -136,7 +203,7 @@
     background-position: center;
     background-repeat: no-repeat;
     transition: background-image 1.5s ease, opacity 1.5s ease;
-    filter: brightness(0.45);
+    filter: brightness(0.75);
     background-image: url('https://res.cloudinary.com/dwtjqa7ry/image/upload/v1772947823/mark-patterson-759UFvlg78U-unsplash_ezshja.jpg');
   }
 
@@ -248,11 +315,18 @@
 
   <!-- 화면 0: 인트로 -->
   <div class="screen active" id="screen-0">
-    <div class="app-title">내 마음의 날씨</div>
-    <div class="main-text">뭘 해야 할지 모르겠고,<br>뭘 좋아하는지도 사실 잘 모르겠죠.</div>
-    <div class="divider"></div>
-    <div class="sub-text">그렇다고 게으른 게 아니에요.<br>그냥 아직 못 찾은 거예요.</div>
-    <button class="btn" onclick="showScreen('screen-1')">제 마음을 들킨 것 같아요</button>
+    <div class="intro-title">내 마음의<br>날씨</div>
+    <div class="intro-sequence" id="introSequence">
+      <div class="seq-line" id="seq1">뭘 해야 할지 모르겠고,</div>
+      <div class="seq-line" id="seq2">뭘 좋아하는지도 사실 잘 모르겠죠.</div>
+      <div class="seq-line seq-sub" id="seq3">그렇다고 게으른 게 아니에요.</div>
+      <div class="seq-line seq-sub" id="seq4">그냥 아직 못 찾은 거예요.</div>
+    </div>
+    <div class="intro-btn-wrap" id="introBtnWrap">
+      <button class="btn btn-comic" onclick="showScreen('screen-1')">
+        🫣 어, 어떻게 알았어요?
+      </button>
+    </div>
   </div>
 
   <!-- 화면 1: 날씨 선택 -->
@@ -739,9 +813,55 @@
     }
   }
 
-  // 페이지 로드 시 첫 화면 배경 설정
+  // 인트로 시퀀스 애니메이션
+  function runIntroSequence() {
+    const btn = document.getElementById('introBtnWrap');
+    let t = 1400;
+
+    // seq1 등장
+    setTimeout(() => document.getElementById('seq1').classList.add('visible'), t);
+    t += 1800;
+
+    // seq1 사라지고 seq2 등장
+    setTimeout(() => document.getElementById('seq1').classList.add('hidden'), t);
+    t += 500;
+    setTimeout(() => document.getElementById('seq2').classList.add('visible'), t);
+    t += 1800;
+
+    // seq2 사라지고 seq3 등장
+    setTimeout(() => document.getElementById('seq2').classList.add('hidden'), t);
+    t += 500;
+    setTimeout(() => document.getElementById('seq3').classList.add('visible'), t);
+    t += 1600;
+
+    // seq3 사라지고 seq4 등장
+    setTimeout(() => document.getElementById('seq3').classList.add('hidden'), t);
+    t += 500;
+    setTimeout(() => document.getElementById('seq4').classList.add('visible'), t);
+    t += 1600;
+
+    // 전체 사라지고 전부 다시 등장
+    setTimeout(() => {
+      ['seq1','seq2','seq3','seq4'].forEach(id => document.getElementById(id).classList.add('hidden'));
+    }, t);
+    t += 700;
+    setTimeout(() => {
+      ['seq1','seq2','seq3','seq4'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('hidden');
+        el.classList.add('visible');
+      });
+    }, t);
+    t += 1200;
+
+    // 버튼 등장
+    setTimeout(() => btn.classList.add('visible'), t);
+  }
+
+  // 페이지 로드 시 실행
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
+    runIntroSequence();
   });
 </script>
 </body>
