@@ -139,7 +139,91 @@
     cursor: pointer; text-align: left; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px;
   }
   .purpose-btn:hover { background: rgba(78,205,196,0.12); border-color: var(--teal); transform: translateX(4px); }
-  .input-wrap { width: 100%; max-width: 500px; margin-bottom: 32px; }
+  .textarea-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .mic-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(78,205,196,0.4);
+    background: rgba(78,205,196,0.08);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+  .mic-btn:hover {
+    background: rgba(78,205,196,0.2);
+    border-color: var(--teal);
+    transform: scale(1.1);
+  }
+  .mic-btn.recording {
+    background: rgba(255,80,80,0.2);
+    border-color: #ff5050;
+    animation: mic-pulse 1s ease-in-out infinite;
+  }
+  @keyframes mic-pulse {
+    0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255,80,80,0.4); }
+    50%       { transform: scale(1.12); box-shadow: 0 0 0 8px rgba(255,80,80,0); }
+  }
+  .mic-status {
+    font-size: 13px;
+    color: var(--teal);
+    opacity: 0.8;
+    margin-top: 8px;
+    min-height: 18px;
+    text-align: center;
+    transition: opacity 0.3s;
+  }
+  .mic-preview {
+    margin-top: 12px;
+    background: rgba(78,205,196,0.08);
+    border: 1px solid rgba(78,205,196,0.25);
+    border-radius: 14px;
+    padding: 14px 16px;
+    animation: intro-fade-up 0.4s ease forwards;
+  }
+  .mic-preview-text {
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+  .mic-preview-btns {
+    display: flex;
+    gap: 10px;
+  }
+  .mic-confirm, .mic-retry {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  .mic-confirm {
+    background: rgba(78,205,196,0.2);
+    color: var(--teal);
+    border: 1px solid rgba(78,205,196,0.4);
+  }
+  .mic-confirm:hover { background: rgba(78,205,196,0.35); }
+  .mic-retry {
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .mic-retry:hover { background: rgba(255,255,255,0.12); }
   .text-input {
     width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(78,205,196,0.4);
     padding: 12px 0; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 18px;
@@ -147,7 +231,7 @@
   }
   .text-input::placeholder { color: rgba(232,244,240,0.3); font-size: 16px; }
   .text-input:focus { border-color: var(--teal); }
-  .textarea-input {
+  .input-wrap { width: 100%; max-width: 500px; margin-bottom: 32px; }
     width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(78,205,196,0.4);
     padding: 12px 0; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 17px;
     outline: none; resize: none; min-height: 80px; transition: border-color 0.3s; line-height: 1.8;
@@ -376,7 +460,18 @@
     <div class="q-num" id="qNum"></div>
     <div class="main-text" id="qText"></div>
     <div class="input-wrap" style="margin-top:28px">
-      <textarea class="textarea-input" id="qAnswer" placeholder="여기에 답변을 입력하세요..."></textarea>
+      <div class="textarea-wrap">
+        <textarea class="textarea-input" id="qAnswer" placeholder="여기에 답변을 입력하세요..."></textarea>
+        <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="음성으로 답변하기">🎙️</button>
+      </div>
+      <div class="mic-status" id="micStatus"></div>
+      <div class="mic-preview" id="micPreview" style="display:none">
+        <div class="mic-preview-text" id="micPreviewText"></div>
+        <div class="mic-preview-btns">
+          <button class="mic-confirm" onclick="confirmVoice()">✅ 맞아요</button>
+          <button class="mic-retry" onclick="retryVoice()">🔄 다시 말할게요</button>
+        </div>
+      </div>
     </div>
     <button class="btn" id="qBtn" onclick="submitAnswer()">계속</button>
   </div>
@@ -769,6 +864,101 @@
         setTimeout(() => { btn.innerText = '🔗 공유하기'; }, 2000);
       }).catch(() => {});
     }
+  }
+
+  // 음성 입력 — 미리보기 확인 방식
+  let recognition = null;
+  let isRecording = false;
+  let interimText = '';
+
+  function toggleVoice() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      document.getElementById('micStatus').innerText = '이 브라우저는 음성 입력을 지원하지 않아요 😢';
+      return;
+    }
+    if (isRecording) {
+      stopVoice();
+    } else {
+      startVoice();
+    }
+  }
+
+  function startVoice() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'ko-KR';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      interimText = '';
+      document.getElementById('micBtn').classList.add('recording');
+      document.getElementById('micBtn').innerText = '🔴';
+      document.getElementById('micStatus').innerText = '듣고 있어요... 말씀해주세요 🎙️';
+      document.getElementById('micPreview').style.display = 'none';
+    };
+
+    recognition.onresult = (e) => {
+      let interim = '';
+      let final = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          final += e.results[i][0].transcript;
+        } else {
+          interim += e.results[i][0].transcript;
+        }
+      }
+      if (interim) {
+        interimText = interim;
+        document.getElementById('micStatus').innerText = `"${interim}"`;
+      }
+      if (final) {
+        interimText = final;
+        showPreview(final);
+      }
+    };
+
+    recognition.onerror = () => stopVoice();
+    recognition.onend = () => {
+      isRecording = false;
+      document.getElementById('micBtn').classList.remove('recording');
+      document.getElementById('micBtn').innerText = '🎙️';
+      document.getElementById('micStatus').innerText = '';
+      if (interimText) showPreview(interimText);
+    };
+
+    recognition.start();
+  }
+
+  function stopVoice() {
+    isRecording = false;
+    if (recognition) recognition.stop();
+    document.getElementById('micBtn').classList.remove('recording');
+    document.getElementById('micBtn').innerText = '🎙️';
+    document.getElementById('micStatus').innerText = '';
+  }
+
+  function showPreview(text) {
+    interimText = text;
+    const preview = document.getElementById('micPreview');
+    document.getElementById('micPreviewText').innerText = `"${text}"`;
+    preview.style.display = 'block';
+    document.getElementById('micStatus').innerText = '';
+  }
+
+  function confirmVoice() {
+    const textarea = document.getElementById('qAnswer');
+    const existing = textarea.value.trim();
+    textarea.value = existing ? existing + ' ' + interimText : interimText;
+    document.getElementById('micPreview').style.display = 'none';
+    interimText = '';
+  }
+
+  function retryVoice() {
+    document.getElementById('micPreview').style.display = 'none';
+    interimText = '';
+    startVoice();
   }
 
   function restart() {
