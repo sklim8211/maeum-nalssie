@@ -144,21 +144,18 @@
     width: 100%;
   }
   .mic-btn {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: 1.5px solid rgba(78,205,196,0.4);
     background: rgba(78,205,196,0.08);
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    z-index: 2;
+    margin: 12px auto 0;
   }
   .mic-btn:hover {
     background: rgba(78,205,196,0.2);
@@ -231,7 +228,96 @@
   }
   .text-input::placeholder { color: rgba(232,244,240,0.3); font-size: 16px; }
   .text-input:focus { border-color: var(--teal); }
-  .input-wrap { width: 100%; max-width: 500px; margin-bottom: 32px; }
+  /* 각 화면 타이틀 효과 */
+
+  /* 날씨 선택 — 물결치듯 글자가 위아래로 출렁이며 등장 */
+  .weather-title {
+    font-size: clamp(17px, 3.8vw, 24px);
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 32px;
+    font-weight: 400;
+    word-break: keep-all;
+  }
+  .weather-title span {
+    display: inline-block;
+    opacity: 0;
+    animation: wave-in 0.5s ease forwards;
+  }
+  @keyframes wave-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 날씨 공감 — blur에서 선명하게 */
+  .empathy-text {
+    font-size: clamp(18px, 4vw, 26px);
+    line-height: 2.0;
+    color: var(--text);
+    margin-bottom: 40px;
+    white-space: pre-line;
+    word-break: keep-all;
+    filter: blur(6px);
+    opacity: 0;
+    transition: filter 1.4s ease, opacity 1.4s ease;
+  }
+  .empathy-text.revealed {
+    filter: blur(0px);
+    opacity: 1;
+  }
+
+  /* 목적 선택 — 빗방울처럼 위에서 뚝 떨어지는 효과 */
+  .purpose-title {
+    font-size: clamp(17px, 3.8vw, 24px);
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 400;
+    word-break: keep-all;
+  }
+  .purpose-title span {
+    display: inline-block;
+    opacity: 0;
+    animation: drop-in 0.4s cubic-bezier(0.23, 1.5, 0.32, 1) forwards;
+  }
+  @keyframes drop-in {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 질문 화면 — 타이핑 효과 */
+  .q-text-typing::after {
+    content: '|';
+    animation: blink 0.8s step-end infinite;
+    color: var(--teal);
+    margin-left: 1px;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* 공감 멘트 — 아래서 위로 떠오르는 효과 */
+  .empathy-rise {
+    animation: rise-up 1.0s ease forwards;
+    opacity: 0;
+  }
+  @keyframes rise-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 에세이 — 한 줄씩 순차 등장 */
+  .essay-line {
+    display: block;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .essay-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
     width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(78,205,196,0.4);
     padding: 12px 0; color: var(--text); font-family: 'Nanum Myeongjo', serif; font-size: 17px;
     outline: none; resize: none; min-height: 80px; transition: border-color 0.3s; line-height: 1.8;
@@ -419,7 +505,7 @@
   <!-- 화면 1: 날씨 선택 -->
   <div class="screen" id="screen-1">
     <div class="app-title">내 마음의 날씨</div>
-    <div class="main-text" style="margin-bottom:32px">오늘 내 마음의 날씨는<br>어떤가요?</div>
+    <div class="weather-title" id="weatherTitle">오늘 내 마음의 날씨는<br>어떤가요?</div>
     <div class="weather-grid">
       <button class="weather-btn" onclick="selectWeather('sunny')"><span>☀️</span><div><span class="label">맑음</span>오늘 꽤 괜찮은 날이에요</div></button>
       <button class="weather-btn" onclick="selectWeather('cloudy')"><span>⛅</span><div><span class="label">흐림</span>뭔가 좀 무거운 하루에요</div></button>
@@ -436,7 +522,7 @@
 
   <!-- 화면 3: 목적 선택 — 날씨에 따라 문구 바뀜 -->
   <div class="screen" id="screen-3">
-    <div class="main-text" style="margin-bottom:8px" id="purposeTitle">오늘 여기 온 당신에게<br>어떤 시간이 필요한가요?</div>
+    <div class="purpose-title" style="margin-bottom:8px" id="purposeTitle">오늘 여기 온 당신에게<br>어떤 시간이 필요한가요?</div>
     <div class="sub-text" style="margin-bottom:28px" id="purposeSubtitle">어떤 이유든 괜찮아요</div>
     <div class="purpose-grid">
       <button class="purpose-btn" onclick="selectPurpose('discover')"><span>🌱</span><div>나를 좀 더 알고 싶어요</div></button>
@@ -462,8 +548,8 @@
     <div class="input-wrap" style="margin-top:28px">
       <div class="textarea-wrap">
         <textarea class="textarea-input" id="qAnswer" placeholder="여기에 답변을 입력하세요..."></textarea>
-        <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="음성으로 답변하기">🎙️</button>
       </div>
+      <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="음성으로 답변하기">🎙️</button>
       <div class="mic-status" id="micStatus"></div>
       <div class="mic-preview" id="micPreview" style="display:none">
         <div class="mic-preview-text" id="micPreviewText"></div>
@@ -736,6 +822,64 @@
     document.getElementById('progressBar').style.width = pct + '%';
   }
 
+  // 물결 효과 — 글자 하나씩 딜레이
+  function waveTitle(el) {
+    if (!el) return;
+    const html = el.innerHTML;
+    const chars = html.replace(/<br>/g, '\n').split('');
+    let delay = 0;
+    el.innerHTML = chars.map(c => {
+      if (c === '\n') return '<br>';
+      const span = `<span style="animation-delay:${delay}ms">${c === ' ' ? '&nbsp;' : c}</span>`;
+      delay += 60;
+      return span;
+    }).join('');
+  }
+
+  // 빗방울 효과 — 글자 하나씩 위에서 뚝
+  function dropTitle(el) {
+    if (!el) return;
+    const html = el.innerHTML;
+    const chars = html.replace(/<br>/g, '\n').split('');
+    let delay = 0;
+    el.innerHTML = chars.map(c => {
+      if (c === '\n') return '<br>';
+      const span = `<span style="animation-delay:${delay}ms">${c === ' ' ? '&nbsp;' : c}</span>`;
+      delay += 55;
+      return span;
+    }).join('');
+  }
+
+  // 타이핑 효과 — 질문 텍스트
+  function typeText(el, text, callback) {
+    if (!el) return;
+    el.innerText = '';
+    el.classList.add('q-text-typing');
+    let i = 0;
+    const speed = 38;
+    const timer = setInterval(() => {
+      el.innerText += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(timer);
+        setTimeout(() => el.classList.remove('q-text-typing'), 400);
+        if (callback) callback();
+      }
+    }, speed);
+  }
+
+  // 에세이 한 줄씩 등장
+  function revealEssayLines(el) {
+    if (!el) return;
+    const text = el.innerHTML;
+    const lines = text.split('\n');
+    el.innerHTML = lines.map(l => `<span class="essay-line">${l}</span>`).join('\n');
+    const spans = el.querySelectorAll('.essay-line');
+    spans.forEach((span, i) => {
+      setTimeout(() => span.classList.add('visible'), i * 180);
+    });
+  }
+
   function showLighthouse(show) {
     const display = show ? 'block' : 'none';
     document.getElementById('lighthouseGlow').style.display = display;
@@ -747,13 +891,26 @@
     const el = document.getElementById(id);
     if (el) { void el.offsetWidth; el.classList.add('active'); }
     window.scrollTo(0, 0);
-    // 인트로/날씨 선택 화면 — 등대 배경 + 불빛
     if (id === 'screen-0') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.intro}')`;
       showLighthouse(false);
     } else if (id === 'screen-1') {
       document.getElementById('bgPhoto').style.backgroundImage = `url('${weatherPhotos.weather}')`;
       showLighthouse(true);
+      // 날씨 선택 타이틀 물결 효과
+      setTimeout(() => waveTitle(document.getElementById('weatherTitle')), 300);
+    } else if (id === 'screen-2') {
+      showLighthouse(false);
+      // 날씨 공감 blur → 선명 효과
+      const msg = document.getElementById('weatherMsg');
+      if (msg) {
+        msg.classList.remove('revealed');
+        setTimeout(() => msg.classList.add('revealed'), 200);
+      }
+    } else if (id === 'screen-3') {
+      showLighthouse(false);
+      // 목적 선택 타이틀 빗방울 효과
+      setTimeout(() => dropTitle(document.getElementById('purposeTitle')), 300);
     } else {
       showLighthouse(false);
     }
@@ -808,12 +965,14 @@
     const q = questions[index];
     const total = questions.length;
     document.getElementById('qNum').innerText = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
-    document.getElementById('qText').innerText = q.text;
+    document.getElementById('qText').innerText = '';
     document.getElementById('qBtn').innerText = q.btn;
     document.getElementById('qAnswer').value = answers[index] || '';
     updateProgress(index + 1, total);
     showScreen('screen-q');
-    setTimeout(() => document.getElementById('qAnswer').focus(), 400);
+    // 타이핑 효과
+    setTimeout(() => typeText(document.getElementById('qText'), q.text), 300);
+    setTimeout(() => document.getElementById('qAnswer').focus(), q.text.length * 38 + 500);
   }
 
   function submitAnswer() {
@@ -824,8 +983,12 @@
     const empSet = (empathySets[purpose] || empathySets['just'])[weather] ||
                    (empathySets[purpose] || empathySets['just'])['foggy'];
     const msg = empSet[currentQIndex] || '잘 들었어요.\n고마워요.';
-    document.getElementById('empathyText').innerText = msg;
+    const empEl = document.getElementById('empathyText');
+    empEl.innerText = msg;
+    empEl.classList.remove('revealed', 'empathy-rise');
     showScreen('screen-empathy');
+    // 공감 멘트 rise-up 효과
+    setTimeout(() => empEl.classList.add('empathy-rise'), 100);
   }
 
   function goBackToQuestion() {
@@ -996,6 +1159,9 @@
       document.getElementById('essayBody').innerHTML = formatted;
       document.getElementById('endingName2').innerText = userName;
       document.getElementById('progressBar').style.width = '100%';
+      showScreen('screen-essay');
+      // 에세이 한 줄씩 등장
+      setTimeout(() => revealEssayLines(document.getElementById('essayBody')), 400);
       fadeToTrack('essay');
       showScreen('screen-essay');
     } catch (err) {
