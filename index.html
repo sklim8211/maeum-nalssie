@@ -757,15 +757,18 @@
   // BGM 설정
   const bgmTracks = {
     // 날씨별
-    sunny:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944044/just_hcfeue.mp3',  // 사티 짐노페디
-    cloudy: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944042/essay_hrhff7.mp3', // 구노 아베마리아
-    foggy:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944051/foggy_ccu57u.mp3', // 헨델 파사칼리아
-    rainy:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944053/rainy_tand1q.mp3', // 바흐 첼로
+    sunny:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1773028847/Piano_Concerto_no._21_in_C_major_K._467_-_II._Andante_zffrdt.mp3',  // 모차르트 피아노협주곡 21번
+    cloudy: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1773028849/Nocturne_in_B_flat_minor_Op._9_no._1_tkmcdr.mp3',                   // 쇼팽 녹턴
+    foggy:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944051/foggy_ccu57u.mp3',                                                  // 헨델 파사칼리아
+    rainy:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944053/rainy_tand1q.mp3',                                                  // 바흐 무반주 첼로
     // 목적별
-    just:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944044/just_hcfeue.mp3',
-    worry: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944042/essay_hrhff7.mp3',
+    discover: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1773028846/Air_on_the_G_String_from_Orchestral_Suite_no._3_BWV_1068_gym8lw.mp3', // 바흐 G선상의 아리아
+    know:     'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1773028846/Air_on_the_G_String_from_Orchestral_Suite_no._3_BWV_1068_gym8lw.mp3', // 바흐 G선상의 아리아
+    diary: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1773028849/Goldberg_Variations_BWV_988_-_01_-_Aria_rhooiz.mp3',                 // 바흐 골드베르그 아리아
+    just:  'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944044/just_hcfeue.mp3',                                                    // 사티 짐노페디
+    worry: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944042/essay_hrhff7.mp3',                                                   // 구노 아베마리아
     // 에세이 화면
-    essay: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944042/essay_hrhff7.mp3'
+    essay: 'https://res.cloudinary.com/dwtjqa7ry/video/upload/v1772944042/essay_hrhff7.mp3'                                                    // 구노 아베마리아
   };
 
   let isMuted = false;
@@ -776,10 +779,15 @@
     if (!src || currentTrack === src) return;
     const bgm = document.getElementById('bgm');
     bgm.src = src;
-    bgm.volume = 0.35;
+    bgm.volume = 0;
     currentTrack = src;
     if (!isMuted) {
       bgm.play().catch(() => {});
+      // 0 → 0.18 천천히 페이드인 (3초)
+      const fadeIn = setInterval(() => {
+        bgm.volume = Math.min(0.18, bgm.volume + 0.01);
+        if (bgm.volume >= 0.18) clearInterval(fadeIn);
+      }, 150);
     }
   }
 
@@ -787,10 +795,10 @@
     const src = bgmTracks[key];
     if (!src || currentTrack === src) return;
     const bgm = document.getElementById('bgm');
-    // 페이드 아웃 후 새 곡 재생
+    // 페이드 아웃
     let vol = bgm.volume;
     const fadeOut = setInterval(() => {
-      vol = Math.max(0, vol - 0.05);
+      vol = Math.max(0, vol - 0.02);
       bgm.volume = vol;
       if (vol <= 0) {
         clearInterval(fadeOut);
@@ -799,10 +807,11 @@
         currentTrack = src;
         if (!isMuted) {
           bgm.play().catch(() => {});
+          // 0 → 0.18 천천히 페이드인 (3초)
           const fadeIn = setInterval(() => {
-            bgm.volume = Math.min(0.35, bgm.volume + 0.05);
-            if (bgm.volume >= 0.35) clearInterval(fadeIn);
-          }, 100);
+            bgm.volume = Math.min(0.18, bgm.volume + 0.01);
+            if (bgm.volume >= 0.18) clearInterval(fadeIn);
+          }, 150);
         }
       }
     }, 100);
