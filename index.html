@@ -88,7 +88,7 @@
     opacity: 0;
     transform: translateY(10px);
     filter: blur(8px);
-    transition: opacity 2.2s ease, transform 2.2s ease, filter 2.2s ease;
+    transition: opacity 3.0s ease, transform 3.0s ease, filter 3.0s ease;
     text-shadow: 0 1px 10px rgba(0,0,0,0.5);
   }
   .seq-line.visible {
@@ -100,11 +100,11 @@
     opacity: 0;
     transform: translateY(-8px);
     filter: blur(6px);
-    transition: opacity 1.3s ease, transform 1.3s ease, filter 1.3s ease;
+    transition: opacity 1.5s ease, transform 1.5s ease, filter 1.5s ease;
   }
   .seq-sub {
     font-size: clamp(16px, 4vw, 20px);
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.92);
   }
   .intro-btn-wrap {
     margin-top: 36px;
@@ -1200,35 +1200,35 @@
   // 인트로 시퀀스 애니메이션
   function runIntroSequence() {
     const btn = document.getElementById('introBtnWrap');
-    let t = 1400;
+    let t = 1600;
 
     // seq1 등장
     setTimeout(() => document.getElementById('seq1').classList.add('visible'), t);
-    t += 1800;
+    t += 2800;
 
     // seq1 사라지고 seq2 등장
     setTimeout(() => document.getElementById('seq1').classList.add('hidden'), t);
-    t += 500;
+    t += 800;
     setTimeout(() => document.getElementById('seq2').classList.add('visible'), t);
-    t += 1800;
+    t += 2800;
 
     // seq2 사라지고 seq3 등장
     setTimeout(() => document.getElementById('seq2').classList.add('hidden'), t);
-    t += 500;
+    t += 800;
     setTimeout(() => document.getElementById('seq3').classList.add('visible'), t);
-    t += 1600;
+    t += 2600;
 
     // seq3 사라지고 seq4 등장
     setTimeout(() => document.getElementById('seq3').classList.add('hidden'), t);
-    t += 500;
+    t += 800;
     setTimeout(() => document.getElementById('seq4').classList.add('visible'), t);
-    t += 1600;
+    t += 2600;
 
     // 전체 사라지고 전부 다시 등장
     setTimeout(() => {
       ['seq1','seq2','seq3','seq4'].forEach(id => document.getElementById(id).classList.add('hidden'));
     }, t);
-    t += 700;
+    t += 1200;
     setTimeout(() => {
       ['seq1','seq2','seq3','seq4'].forEach(id => {
         const el = document.getElementById(id);
@@ -1236,7 +1236,7 @@
         el.classList.add('visible');
       });
     }, t);
-    t += 1200;
+    t += 1800;
 
     // 버튼 등장
     setTimeout(() => btn.classList.add('visible'), t);
